@@ -1,0 +1,27 @@
+{
+  "name": "helperjs",
+  "version": "1.0.0",
+  "description": "Helper Functions JavaScript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aguinaldotupy/helperjs.git"
+  },
+  "keywords": [
+    "helpers",
+    "functions",
+    "javascript"
+  ],
+  "author": "Aguinaldo Tupy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aguinaldotupy/helperjs/issues"
+  },
+  "homepage": "https://github.com/aguinaldotupy/helperjs#readme",
+  "devDependencies": {
+    "typescript": "^3.8.3"
+  }
+}
