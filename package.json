@@ -1,5 +1,5 @@
 {
-  "name": "helperjs",
+  "name": "@tupy/helperjs",
   "version": "1.0.0",
   "description": "Helper Functions JavaScript",
   "main": "build/index.js",
@@ -22,7 +22,7 @@
     "javascript"
   ],
   "author": "Aguinaldo Tupy",
-  "license": "MIT",
+  "license": "ISC",
   "bugs": {
     "url": "https://github.com/aguinaldotupy/helperjs/issues"
   },
