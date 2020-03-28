@@ -7,7 +7,7 @@
   "jsnext:main": "build/index.es.js",
   "scripts": {
     "build": "rollup -c",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --coverage"
   },
   "files": [
     "build"
@@ -28,11 +28,18 @@
   },
   "homepage": "https://github.com/aguinaldotupy/helperjs#readme",
   "devDependencies": {
+    "@types/jest": "^25.1.4",
+    "jest": "^25.2.3",
     "rollup": "^2.2.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-peer-deps-external": "^2.2.2",
     "rollup-plugin-typescript2": "^0.27.0",
+    "ts-jest": "^25.2.1",
     "typescript": "^3.8.3"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node"
   }
 }

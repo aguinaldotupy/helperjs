@@ -1,3 +1,5 @@
+export const sum = (a: number, b: number): number => a + b;
+
 export const isMobile = () => {
     const check = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS|Windows Phone/i
     return check.test(navigator.userAgent)

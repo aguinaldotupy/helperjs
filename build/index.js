@@ -2,6 +2,7 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
+var sum = function (a, b) { return a + b; };
 var isMobile = function () {
     var check = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS|Windows Phone/i;
     return check.test(navigator.userAgent);
@@ -99,6 +100,7 @@ exports.isNumber = isNumber;
 exports.lowerBound = lowerBound;
 exports.restrictCharacters = restrictCharacters;
 exports.sleep = sleep;
+exports.sum = sum;
 exports.toSnakeCase = toSnakeCase;
 exports.validateEmail = validateEmail;
 //# sourceMappingURL=index.js.map

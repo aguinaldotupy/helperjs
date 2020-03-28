@@ -1,3 +1,4 @@
+export declare const sum: (a: number, b: number) => number;
 export declare const isMobile: () => boolean;
 export declare const isDesktop: () => boolean;
 export declare const checkValidUrl: (url: string) => boolean;

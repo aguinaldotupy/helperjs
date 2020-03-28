@@ -1,3 +1,4 @@
+var sum = function (a, b) { return a + b; };
 var isMobile = function () {
     var check = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS|Windows Phone/i;
     return check.test(navigator.userAgent);
@@ -87,5 +88,5 @@ var isNumber = function (evt) {
     }
 };
 
-export { capitalizeWords, checkValidUrl, isDesktop, isMobile, isNumber, lowerBound, restrictCharacters, sleep, toSnakeCase, validateEmail };
+export { capitalizeWords, checkValidUrl, isDesktop, isMobile, isNumber, lowerBound, restrictCharacters, sleep, sum, toSnakeCase, validateEmail };
 //# sourceMappingURL=index.es.js.map
