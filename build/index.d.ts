@@ -15,3 +15,14 @@ export declare const validateEmail: (email: String) => boolean;
 */
 export declare const restrictCharacters: (_myField: HTMLOrSVGElement, evt: KeyboardEvent, restrictionType: string) => any;
 export declare const isNumber: (evt: KeyboardEvent) => any;
+export declare class AddressManager {
+    urlIBGE?: string | undefined;
+    configuration?: Object | undefined;
+    urlBaseIBGE: string;
+    config: object;
+    constructor(urlIBGE?: string | undefined, configuration?: Object | undefined);
+    states(): Promise<any>;
+    cities(codeState?: null): Promise<any>;
+    neighborhoods(codeCity?: null): Promise<any>;
+    searchCep(cep: string): Promise<any> | "Formato de CEP inválido.";
+}
