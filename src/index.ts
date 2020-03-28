@@ -104,3 +104,16 @@ export const isNumber = (evt: KeyboardEvent): any => {
      return true
   }
 };
+
+/**
+ *
+ * @param input
+ * @returns {string|*}
+ */
+export const decodeString = (input: string) => {
+    if (/&amp;|&quot;|&#39;|'&lt;|&gt;/.test(input)) {
+        let doc = new DOMParser().parseFromString(input, "text/html");
+        return doc.documentElement.textContent;
+    }
+    return input;
+};

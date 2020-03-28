@@ -15,3 +15,9 @@ export declare const validateEmail: (email: String) => boolean;
 */
 export declare const restrictCharacters: (_myField: HTMLOrSVGElement, evt: KeyboardEvent, restrictionType: string) => any;
 export declare const isNumber: (evt: KeyboardEvent) => any;
+/**
+ *
+ * @param input
+ * @returns {string|*}
+ */
+export declare const decodeString: (input: string) => string | null;

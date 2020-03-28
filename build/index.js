@@ -91,9 +91,22 @@ var isNumber = function (evt) {
         return true;
     }
 };
+/**
+ *
+ * @param input
+ * @returns {string|*}
+ */
+var decodeString = function (input) {
+    if (/&amp;|&quot;|&#39;|'&lt;|&gt;/.test(input)) {
+        var doc = new DOMParser().parseFromString(input, "text/html");
+        return doc.documentElement.textContent;
+    }
+    return input;
+};
 
 exports.capitalizeWords = capitalizeWords;
 exports.checkValidUrl = checkValidUrl;
+exports.decodeString = decodeString;
 exports.isDesktop = isDesktop;
 exports.isMobile = isMobile;
 exports.isNumber = isNumber;
