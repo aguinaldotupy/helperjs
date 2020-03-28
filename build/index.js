@@ -91,50 +91,7 @@ var isNumber = function (evt) {
         return true;
     }
 };
-var AddressManager = /** @class */ (function () {
-    function AddressManager(urlIBGE, configuration) {
-        this.urlIBGE = urlIBGE;
-        this.configuration = configuration;
-        this.urlBaseIBGE = 'https://servicodados.ibge.gov.br/api/v1/localidades';
-        this.config = {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            }
-        };
-        this.urlIBGE = urlIBGE || this.urlBaseIBGE;
-        this.configuration = configuration || this.config;
-    }
-    AddressManager.prototype.states = function () {
-        return fetch(this.urlIBGE + "/estados", this.configuration).then(function (response) { return response.json(); });
-    };
-    AddressManager.prototype.cities = function (codeState) {
-        if (codeState === void 0) { codeState = null; }
-        var url = codeState ? this.urlIBGE + "/estados/" + codeState + "/municipios" : this.urlIBGE + "/municipios";
-        return fetch(url, this.configuration).then(function (response) { return response.json(); });
-    };
-    AddressManager.prototype.neighborhoods = function (codeCity) {
-        if (codeCity === void 0) { codeCity = null; }
-        var url = codeCity ? this.urlIBGE + "/municipios/" + codeCity + "/subdistritos" : this.urlIBGE + "/subdistritos";
-        return fetch(url, this.configuration).then(function (response) { return response.json(); });
-    };
-    AddressManager.prototype.searchCep = function (cep) {
-        // Nova variável "cep" somente com dígitos.
-        var newCep = cep.replace(/\D/g, '');
-        // Expressão regular para validar o CEP.
-        var validateZipCode = /^[0-9]{8}$/;
-        if (!validateZipCode.test(newCep)) {
-            return 'Formato de CEP inválido.';
-        }
-        return fetch("https://viacep.com.br/ws/" + cep + "/json/", this.configuration)
-            .then(function (response) { return response.json(); });
-    };
-    return AddressManager;
-}());
 
-exports.AddressManager = AddressManager;
 exports.capitalizeWords = capitalizeWords;
 exports.checkValidUrl = checkValidUrl;
 exports.isDesktop = isDesktop;
