@@ -1,16 +1,37 @@
 var sum = function (a, b) { return a + b; };
+var toType = function (value) { return typeof value; };
+var isObject = function (object) { return object !== null && typeof object === 'object'; };
+var isPlainObject = function (object) { return Object.prototype.toString.call(object) === '[object Object]'; };
+var isArray = function (value) { return Array.isArray(value); };
+var isFunction = function (value) { return toType(value) === 'function'; };
+var isBoolean = function (value) { return toType(value) === 'boolean'; };
+var isString = function (value) { return toType(value) === 'string'; };
+var isNumber = function (value) { return toType(value) === 'number'; };
+var isUndefined = function (value) { return value === undefined; };
+var isNull = function (value) { return value === null; };
+var isEmptyString = function (value) { return value === ''; };
+var isDate = function (value) { return value instanceof Date; };
+var isEvent = function (value) { return value instanceof Event; };
+var isFile = function (value) { return value instanceof File; };
+var isUndefinedOrNull = function (value) { return isUndefined(value) || isNull(value); };
+var RX_TRIM_LEFT = /^\s+/;
+var RX_TRIM_RIGHT = /\s+$/;
+var RX_REGEXP_REPLACE = /[-/\\^$*+?.()|[\]{}]/g;
+var RX_UN_KEBAB = /-(\w)/g;
+var RX_HYPHENATE = /\B([A-Z])/g;
+var RX_PROTOCOL = /^(https?:\/\/)?/;
+var RX_DOMAIN = /(([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}|/;
+var RX_IP_ADDRESS = /((\d{1,3}\.){3}\d{1,3})/;
+var RX_PORT_AND_PATH = /(:\d+)?(\/[-a-z\d%_.~+]*)*/;
+var RX_QUERY_STRING = /(\?[;&a-z\d%_.~+=-]*)?/;
+var RX_HASH_STRING = /(#[-a-z\d_]*)?$/;
 var isMobile = function () {
     var check = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS|Windows Phone/i;
     return check.test(navigator.userAgent);
 };
 var isDesktop = function () { return !isMobile(); };
 var checkValidUrl = function (url) {
-    var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
-        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-        '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-        '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-        '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
+    var pattern = new RegExp("" + RX_PROTOCOL + RX_DOMAIN + RX_IP_ADDRESS + RX_PORT_AND_PATH + RX_QUERY_STRING + RX_HASH_STRING, 'i');
     return pattern.test(url);
 };
 var lowerBound = function (num, limit) {
@@ -30,6 +51,34 @@ var toSnakeCase = function (str) {
         .map(function (strLower) { return strLower.toLowerCase(); })
         .join('_');
 };
+var toString = function (val, spaces) {
+    if (spaces === void 0) { spaces = 2; }
+    return isUndefinedOrNull(val)
+        ? ''
+        : isArray(val) || (isPlainObject(val) && val.toString === Object.prototype.toString)
+            ? JSON.stringify(val, null, spaces)
+            : String(val);
+};
+var kebabCase = function (str) {
+    return str.replace(RX_HYPHENATE, '-$1').toLowerCase();
+};
+var pascalCase = function (str) {
+    str = kebabCase(str).replace(RX_UN_KEBAB, function (_, c) { return (c ? c.toUpperCase() : ''); });
+    return str.charAt(0).toUpperCase() + str.slice(1);
+};
+var lowerFirst = function (str) {
+    str = isString(str) ? str.trim() : String(str);
+    return str.charAt(0).toLowerCase() + str.slice(1);
+};
+var upperFirst = function (str) {
+    str = isString(str) ? str.trim() : String(str);
+    return str.charAt(0).toUpperCase() + str.slice(1);
+};
+var trimLeft = function (str) { return toString(str).replace(RX_TRIM_LEFT, ''); };
+var trimRight = function (str) { return toString(str).replace(RX_TRIM_RIGHT, ''); };
+var trim = function (str) { return toString(str).trim(); };
+var lowerCase = function (str) { return toString(str).toLowerCase(); };
+var upperCase = function (str) { return toString(str).toUpperCase(); };
 var validateEmail = function (email) {
     var regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return regex.test(email.toLowerCase());
@@ -78,7 +127,7 @@ var restrictCharacters = function (_myField, evt, restrictionType) {
         return !!character.match(restrict);
     }
 };
-var isNumber = function (evt) {
+var keydownOnlyNumber = function (evt) {
     var charCode = (typeof evt.which !== "undefined") ? evt.which : evt.keyCode;
     if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode !== 46) {
         evt.preventDefault();
@@ -99,6 +148,77 @@ var decodeString = function (input) {
     }
     return input;
 };
+function generateRandom(n) {
+    return Math.round(Math.random() * n);
+}
+function mod(dividendo, divisor) {
+    return Math.round(dividendo - (Math.floor(dividendo / divisor) * divisor));
+}
+var generateCpf = function (mask) {
+    if (mask === void 0) { mask = false; }
+    var n = 9;
+    var n1 = generateRandom(n);
+    var n2 = generateRandom(n);
+    var n3 = generateRandom(n);
+    var n4 = generateRandom(n);
+    var n5 = generateRandom(n);
+    var n6 = generateRandom(n);
+    var n7 = generateRandom(n);
+    var n8 = generateRandom(n);
+    var n9 = generateRandom(n);
+    var d1 = n9 * 2 + n8 * 3 + n7 * 4 + n6 * 5 + n5 * 6 + n4 * 7 + n3 * 8 + n2 * 9 + n1 * 10;
+    d1 = 11 - (mod(d1, 11));
+    if (d1 >= 10)
+        d1 = 0;
+    var d2 = d1 * 2 + n9 * 3 + n8 * 4 + n7 * 5 + n6 * 6 + n5 * 7 + n4 * 8 + n3 * 9 + n2 * 10 + n1 * 11;
+    d2 = 11 - (mod(d2, 11));
+    if (d2 >= 10)
+        d2 = 0;
+    if (mask) {
+        return "" + n1 + n2 + n3 + "." + n4 + n5 + n6 + "." + n7 + n8 + n9 + "-" + d1 + d2;
+    }
+    return "" + n1 + n2 + n3 + n4 + n5 + n6 + n7 + n8 + n9 + d1 + d2;
+};
+var humanFileSize = function (bytes, decimals) {
+    if (decimals === void 0) { decimals = 2; }
+    if (bytes === 0)
+        return '0 Bytes';
+    var k = 1024;
+    var dm = decimals < 0 ? 0 : decimals;
+    var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    var i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+};
+var deepCopy = function (obj) {
+    if (obj === null || typeof obj !== 'object') {
+        return obj;
+    }
+    var copy = Array.isArray(obj) ? [] : {};
+    Object.keys(obj).forEach(function (key) {
+        copy[key] = deepCopy(obj[key]);
+    });
+    return copy;
+};
+var toCurrency = function (value, prefix, $suffix) {
+    if (prefix === void 0) { prefix = 'R$'; }
+    if ($suffix === void 0) { $suffix = null; }
+    var val = (value).toFixed(2).replace('.', ',');
+    return prefix + " " + val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " " + $suffix;
+};
+var firstAndLastName = function (fullName) {
+    var names = fullName.split(' ');
+    var firstName;
+    var lastName;
+    if (!names || names.length <= 1) {
+        firstName = names;
+        lastName = '';
+    }
+    else {
+        firstName = names[0];
+        lastName = names.pop();
+    }
+    return firstName + " " + lastName;
+};
 
-export { capitalizeWords, checkValidUrl, decodeString, isDesktop, isMobile, isNumber, lowerBound, restrictCharacters, sleep, sum, toSnakeCase, validateEmail };
+export { RX_DOMAIN, RX_HASH_STRING, RX_HYPHENATE, RX_IP_ADDRESS, RX_PORT_AND_PATH, RX_PROTOCOL, RX_QUERY_STRING, RX_REGEXP_REPLACE, RX_TRIM_LEFT, RX_TRIM_RIGHT, RX_UN_KEBAB, capitalizeWords, checkValidUrl, decodeString, deepCopy, firstAndLastName, generateCpf, humanFileSize, isArray, isBoolean, isDate, isDesktop, isEmptyString, isEvent, isFile, isFunction, isMobile, isNull, isNumber, isObject, isPlainObject, isString, isUndefined, isUndefinedOrNull, kebabCase, keydownOnlyNumber, lowerBound, lowerCase, lowerFirst, pascalCase, restrictCharacters, sleep, sum, toCurrency, toSnakeCase, toString, toType, trim, trimLeft, trimRight, upperCase, upperFirst, validateEmail };
 //# sourceMappingURL=index.es.js.map
