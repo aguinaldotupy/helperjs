@@ -5,6 +5,7 @@
   "main": "build/index.js",
   "module": "build/index.es.js",
   "jsnext:main": "build/index.es.js",
+  "license": "MIT",
   "scripts": {
     "build": "rollup -c",
     "test": "jest --coverage"
@@ -22,7 +23,6 @@
     "javascript"
   ],
   "author": "Aguinaldo Tupy",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/aguinaldotupy/helperjs/issues"
   },

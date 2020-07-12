@@ -223,6 +223,14 @@ var firstAndLastName = function (fullName) {
     }
     return firstName + " " + lastName;
 };
+var chunkArray = function (array, size) {
+    var result = [];
+    for (var i = 0; i < array.length; i += size) {
+        var chunk = array.slice(i, i + size);
+        result.push(chunk);
+    }
+    return result;
+};
 
 exports.RX_DOMAIN = RX_DOMAIN;
 exports.RX_HASH_STRING = RX_HASH_STRING;
@@ -237,6 +245,7 @@ exports.RX_TRIM_RIGHT = RX_TRIM_RIGHT;
 exports.RX_UN_KEBAB = RX_UN_KEBAB;
 exports.capitalizeWords = capitalizeWords;
 exports.checkValidUrl = checkValidUrl;
+exports.chunkArray = chunkArray;
 exports.decodeString = decodeString;
 exports.deepCopy = deepCopy;
 exports.firstAndLastName = firstAndLastName;

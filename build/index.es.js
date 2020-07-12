@@ -219,6 +219,14 @@ var firstAndLastName = function (fullName) {
     }
     return firstName + " " + lastName;
 };
+var chunkArray = function (array, size) {
+    var result = [];
+    for (var i = 0; i < array.length; i += size) {
+        var chunk = array.slice(i, i + size);
+        result.push(chunk);
+    }
+    return result;
+};
 
-export { RX_DOMAIN, RX_HASH_STRING, RX_HYPHENATE, RX_IP_ADDRESS, RX_PORT_AND_PATH, RX_PROTOCOL, RX_QUERY_STRING, RX_REGEXP_REPLACE, RX_TRIM_LEFT, RX_TRIM_RIGHT, RX_UN_KEBAB, capitalizeWords, checkValidUrl, decodeString, deepCopy, firstAndLastName, generateCpf, humanFileSize, isArray, isBoolean, isDate, isDesktop, isEmptyString, isEvent, isFile, isFunction, isMobile, isNull, isNumber, isObject, isPlainObject, isString, isUndefined, isUndefinedOrNull, kebabCase, keydownOnlyNumber, lowerBound, lowerCase, lowerFirst, pascalCase, restrictCharacters, sleep, sum, toCurrency, toSnakeCase, toString, toType, trim, trimLeft, trimRight, upperCase, upperFirst, validateEmail };
+export { RX_DOMAIN, RX_HASH_STRING, RX_HYPHENATE, RX_IP_ADDRESS, RX_PORT_AND_PATH, RX_PROTOCOL, RX_QUERY_STRING, RX_REGEXP_REPLACE, RX_TRIM_LEFT, RX_TRIM_RIGHT, RX_UN_KEBAB, capitalizeWords, checkValidUrl, chunkArray, decodeString, deepCopy, firstAndLastName, generateCpf, humanFileSize, isArray, isBoolean, isDate, isDesktop, isEmptyString, isEvent, isFile, isFunction, isMobile, isNull, isNumber, isObject, isPlainObject, isString, isUndefined, isUndefinedOrNull, kebabCase, keydownOnlyNumber, lowerBound, lowerCase, lowerFirst, pascalCase, restrictCharacters, sleep, sum, toCurrency, toSnakeCase, toString, toType, trim, trimLeft, trimRight, upperCase, upperFirst, validateEmail };
 //# sourceMappingURL=index.es.js.map
