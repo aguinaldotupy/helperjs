@@ -228,7 +228,7 @@ var chunkArray = function (array, size) {
     return result;
 };
 var validateCpf = function (val) {
-    var cpf = (val).trim();
+    var cpf = val.toString().trim();
     cpf = cpf.replace(/\./g, '');
     cpf = cpf.replace('-', '');
     cpf = cpf.split('');
@@ -263,7 +263,7 @@ var validateCpf = function (val) {
     return v2 == cpf[10];
 };
 var validateCnpj = function (val) {
-    var cnpj = (val).trim();
+    var cnpj = val.toString().trim();
     cnpj = cnpj.replace(/\./g, '');
     cnpj = cnpj.replace('-', '');
     cnpj = cnpj.replace('/', '');

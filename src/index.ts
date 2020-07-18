@@ -282,7 +282,7 @@ export const chunkArray = (array: string | any[], size: number) => {
 }
 
 export const validateCpf = (val: any | string[]) => {
-    let cpf = (val).trim()
+    let cpf = val.toString().trim()
 
     cpf = cpf.replace(/\./g, '')
     cpf = cpf.replace('-', '')
@@ -330,7 +330,7 @@ export const validateCpf = (val: any | string[]) => {
 };
 
 export const validateCnpj = (val: any) => {
-    let cnpj = (val).trim()
+    let cnpj = val.toString().trim()
 
     cnpj = cnpj.replace(/\./g, '')
     cnpj = cnpj.replace('-', '')
