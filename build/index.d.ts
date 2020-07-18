@@ -65,3 +65,5 @@ export declare const deepCopy: (obj: {
 export declare const toCurrency: (value: number, prefix?: string, $suffix?: null) => string;
 export declare const firstAndLastName: (fullName: string) => string;
 export declare const chunkArray: (array: string | any[], size: number) => (string | any[])[];
+export declare const validateCpf: (val: any) => boolean;
+export declare const validateCnpj: (val: any) => boolean;
