@@ -70,15 +70,15 @@ export declare const validateCpf: (val: any) => boolean;
  * Validates a CNPJ
  * @param cnpj The CNPJ value to be validated
  */
-export declare function validateCnpj(cnpj: string | number): boolean;
+export declare const validateCnpj: (cnpj: string | number) => boolean;
 /**
  * Formats a CNPJ value
  * @param cnpj The CNPJ to be formatted
  * @return The formatted CNPJ
  */
-export declare function maskCnpj(cnpj: string | number): string;
+export declare const maskCnpj: (cnpj: string | number) => string;
 /**
  * Generates a valid CNPJ
  * @return The generated CNPJ
  */
-export declare function generateCnpj(mask?: boolean): string;
+export declare const generateCnpj: (mask?: boolean) => string;

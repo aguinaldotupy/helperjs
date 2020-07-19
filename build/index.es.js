@@ -317,7 +317,7 @@ function digit(numbers) {
  * Validates a CNPJ
  * @param cnpj The CNPJ value to be validated
  */
-function validateCnpj(cnpj) {
+var validateCnpj = function (cnpj) {
     // Remove period, slash and dash characters from CNPJ
     var cleaned = cnpj.toString().replace(/[.\/\-]/g, '');
     if (
@@ -333,25 +333,25 @@ function validateCnpj(cnpj) {
     registration += digit(registration);
     registration += digit(registration);
     return registration.substr(-2) === cleaned.substr(-2);
-}
+};
 /**
  * Formats a CNPJ value
  * @param cnpj The CNPJ to be formatted
  * @return The formatted CNPJ
  */
-function maskCnpj(cnpj) {
+var maskCnpj = function (cnpj) {
     return (cnpj
         .toString()
         // Remove non digit characters
         .replace(/[^\d]/g, '')
         // Apply formatting
         .replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5'));
-}
+};
 /**
  * Generates a valid CNPJ
  * @return The generated CNPJ
  */
-function generateCnpj(mask) {
+var generateCnpj = function (mask) {
     if (mask === void 0) { mask = true; }
     var cnpj = '';
     var i = 12;
@@ -364,7 +364,7 @@ function generateCnpj(mask) {
         cnpj = maskCnpj(cnpj);
     }
     return cnpj;
-}
+};
 
 export { RX_DOMAIN, RX_HASH_STRING, RX_HYPHENATE, RX_IP_ADDRESS, RX_PORT_AND_PATH, RX_PROTOCOL, RX_QUERY_STRING, RX_REGEXP_REPLACE, RX_TRIM_LEFT, RX_TRIM_RIGHT, RX_UN_KEBAB, capitalizeWords, checkValidUrl, chunkArray, decodeString, deepCopy, firstAndLastName, generateCnpj, generateCpf, humanFileSize, isArray, isBoolean, isDate, isDesktop, isEmptyString, isEvent, isFile, isFunction, isMobile, isNull, isNumber, isObject, isPlainObject, isString, isUndefined, isUndefinedOrNull, kebabCase, keydownOnlyNumber, lowerBound, lowerCase, lowerFirst, maskCnpj, pascalCase, restrictCharacters, sleep, sum, toCurrency, toSnakeCase, toString, toType, trim, trimLeft, trimRight, upperCase, upperFirst, validateCnpj, validateCpf, validateEmail };
 //# sourceMappingURL=index.es.js.map

@@ -351,7 +351,7 @@ function digit(numbers: string): number {
  * Validates a CNPJ
  * @param cnpj The CNPJ value to be validated
  */
-export function validateCnpj(cnpj: string | number): boolean {
+export const validateCnpj = (cnpj: string | number): boolean => {
     // Remove period, slash and dash characters from CNPJ
     const cleaned = cnpj.toString().replace(/[.\/\-]/g, '')
 
@@ -378,7 +378,7 @@ export function validateCnpj(cnpj: string | number): boolean {
  * @param cnpj The CNPJ to be formatted
  * @return The formatted CNPJ
  */
-export function maskCnpj(cnpj: string | number): string {
+export const maskCnpj = (cnpj: string | number): string  => {
     return (
         cnpj
             .toString()
@@ -393,7 +393,7 @@ export function maskCnpj(cnpj: string | number): string {
  * Generates a valid CNPJ
  * @return The generated CNPJ
  */
-export function generateCnpj(mask = true): string {
+export const generateCnpj = (mask = true): string => {
     let cnpj = ''
     let i = 12
 
