@@ -66,4 +66,19 @@ export declare const toCurrency: (value: number, prefix?: string, $suffix?: null
 export declare const firstAndLastName: (fullName: string) => string;
 export declare const chunkArray: (array: string | any[], size: number) => (string | any[])[];
 export declare const validateCpf: (val: any) => boolean;
-export declare const validateCnpj: (val: any) => boolean;
+/**
+ * Validates a CNPJ
+ * @param cnpj The CNPJ value to be validated
+ */
+export declare function validateCnpj(cnpj: string | number): boolean;
+/**
+ * Formats a CNPJ value
+ * @param cnpj The CNPJ to be formatted
+ * @return The formatted CNPJ
+ */
+export declare function maskCnpj(cnpj: string | number): string;
+/**
+ * Generates a valid CNPJ
+ * @return The generated CNPJ
+ */
+export declare function generateCnpj(mask?: boolean): string;

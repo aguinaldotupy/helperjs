@@ -2,6 +2,44 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
+/*! *****************************************************************************
+Copyright (c) Microsoft Corporation.
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+***************************************************************************** */
+
+function __read(o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+}
+
+function __spread() {
+    for (var ar = [], i = 0; i < arguments.length; i++)
+        ar = ar.concat(__read(arguments[i]));
+    return ar;
+}
+
 var sum = function (a, b) { return a + b; };
 var toType = function (value) { return typeof value; };
 var isObject = function (object) { return object !== null && typeof object === 'object'; };
@@ -269,61 +307,68 @@ var validateCpf = function (val) {
     }
     return v2 == cpf[10];
 };
-var validateCnpj = function (val) {
-    if (isUndefined(val) || isNull(val)) {
+function digit(numbers) {
+    var index = 2;
+    var sum = __spread(numbers).reverse().reduce(function (buffer, number) {
+        buffer += Number(number) * index;
+        index = index === 9 ? 2 : index + 1;
+        return buffer;
+    }, 0);
+    var mod = sum % 11;
+    return mod < 2 ? 0 : 11 - mod;
+}
+/**
+ * Validates a CNPJ
+ * @param cnpj The CNPJ value to be validated
+ */
+function validateCnpj(cnpj) {
+    // Remove period, slash and dash characters from CNPJ
+    var cleaned = cnpj.toString().replace(/[.\/\-]/g, '');
+    if (
+    // Must be defined
+    !cleaned ||
+        // Must have 14 characters
+        cleaned.length !== 14 ||
+        // Must be digits and not be sequential characters (e.g.: 11111111111111, etc)
+        /^(\d)\1+$/.test(cleaned)) {
         return false;
     }
-    var cnpj = val.toString().trim();
-    cnpj = cnpj.replace(/\./g, '');
-    cnpj = cnpj.replace('-', '');
-    cnpj = cnpj.replace('/', '');
-    cnpj = cnpj.split("");
-    var v1 = 0;
-    var v2 = 0;
-    var aux = false;
-    for (var i = 1; cnpj.length > i; i++) {
-        if (cnpj[i - 1] != cnpj[i]) {
-            aux = true;
-        }
+    var registration = cleaned.substr(0, 12);
+    registration += digit(registration);
+    registration += digit(registration);
+    return registration.substr(-2) === cleaned.substr(-2);
+}
+/**
+ * Formats a CNPJ value
+ * @param cnpj The CNPJ to be formatted
+ * @return The formatted CNPJ
+ */
+function maskCnpj(cnpj) {
+    return (cnpj
+        .toString()
+        // Remove non digit characters
+        .replace(/[^\d]/g, '')
+        // Apply formatting
+        .replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5'));
+}
+/**
+ * Generates a valid CNPJ
+ * @return The generated CNPJ
+ */
+function generateCnpj(mask) {
+    if (mask === void 0) { mask = true; }
+    var cnpj = '';
+    var i = 12;
+    while (i--) {
+        cnpj += Math.floor(Math.random() * 9);
     }
-    if (!aux) {
-        return false;
+    cnpj += digit(cnpj);
+    cnpj += digit(cnpj);
+    if (mask) {
+        cnpj = maskCnpj(cnpj);
     }
-    for (var i = 0, p1 = 5, p2 = 13; cnpj.length - 2 > i; i++, p1--, p2--) {
-        if (p1 >= 2) {
-            v1 += cnpj[i] * p1;
-        }
-        else {
-            v1 += cnpj[i] * p2;
-        }
-    }
-    v1 = v1 % 11;
-    if (v1 < 2) {
-        v1 = 0;
-    }
-    else {
-        v1 = 11 - v1;
-    }
-    if (v1 != cnpj[12]) {
-        return false;
-    }
-    for (var i = 0, p1 = 6, p2 = 14; cnpj.length - 1 > i; i++, p1--, p2--) {
-        if (p1 >= 2) {
-            v2 += cnpj[i] * p1;
-        }
-        else {
-            v2 += cnpj[i] * p2;
-        }
-    }
-    v2 = v2 % 11;
-    if (v2 < 2) {
-        v2 = 0;
-    }
-    else {
-        v2 = 11 - v2;
-    }
-    return v2 == cnpj[13];
-};
+    return cnpj;
+}
 
 exports.RX_DOMAIN = RX_DOMAIN;
 exports.RX_HASH_STRING = RX_HASH_STRING;
@@ -342,6 +387,7 @@ exports.chunkArray = chunkArray;
 exports.decodeString = decodeString;
 exports.deepCopy = deepCopy;
 exports.firstAndLastName = firstAndLastName;
+exports.generateCnpj = generateCnpj;
 exports.generateCpf = generateCpf;
 exports.humanFileSize = humanFileSize;
 exports.isArray = isArray;
@@ -365,6 +411,7 @@ exports.keydownOnlyNumber = keydownOnlyNumber;
 exports.lowerBound = lowerBound;
 exports.lowerCase = lowerCase;
 exports.lowerFirst = lowerFirst;
+exports.maskCnpj = maskCnpj;
 exports.pascalCase = pascalCase;
 exports.restrictCharacters = restrictCharacters;
 exports.sleep = sleep;

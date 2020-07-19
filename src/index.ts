@@ -333,67 +333,80 @@ export const validateCpf = (val: any) => {
     return v2 == cpf[10];
 };
 
-export const validateCnpj = (val: any) => {
-    if (isUndefined(val) || isNull(val)) {
-        return false;
-    }
 
-    let cnpj = val.toString().trim()
+function digit(numbers: string): number {
+    let index = 2
+    const sum = [...numbers].reverse().reduce((buffer, number) => {
+        buffer += Number(number) * index
+        index = index === 9 ? 2 : index + 1
+        return buffer
+    }, 0)
 
-    cnpj = cnpj.replace(/\./g, '')
-    cnpj = cnpj.replace('-', '')
-    cnpj = cnpj.replace('/', '')
-    cnpj = cnpj.split("")
+    const mod = sum % 11
 
-    let v1 = 0
-    let v2 = 0
-    let aux = false
+    return mod < 2 ? 0 : 11 - mod
+}
 
-    for (let i = 1; cnpj.length > i; i++) {
-        if (cnpj[i - 1] != cnpj[i]) {
-            aux = true
-        }
-    }
+/**
+ * Validates a CNPJ
+ * @param cnpj The CNPJ value to be validated
+ */
+export function validateCnpj(cnpj: string | number): boolean {
+    // Remove period, slash and dash characters from CNPJ
+    const cleaned = cnpj.toString().replace(/[.\/\-]/g, '')
 
-    if (!aux) {
+    if (
+        // Must be defined
+        !cleaned ||
+        // Must have 14 characters
+        cleaned.length !== 14 ||
+        // Must be digits and not be sequential characters (e.g.: 11111111111111, etc)
+        /^(\d)\1+$/.test(cleaned)
+    ) {
         return false
     }
 
-    for (let i = 0, p1 = 5, p2 = 13; cnpj.length - 2 > i; i++, p1--, p2--) {
-        if (p1 >= 2) {
-            v1 += cnpj[i] * p1
-        } else {
-            v1 += cnpj[i] * p2
-        }
+    let registration = cleaned.substr(0, 12)
+    registration += digit(registration)
+    registration += digit(registration)
+
+    return registration.substr(-2) === cleaned.substr(-2)
+}
+
+/**
+ * Formats a CNPJ value
+ * @param cnpj The CNPJ to be formatted
+ * @return The formatted CNPJ
+ */
+export function maskCnpj(cnpj: string | number): string {
+    return (
+        cnpj
+            .toString()
+            // Remove non digit characters
+            .replace(/[^\d]/g, '')
+            // Apply formatting
+            .replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5')
+    )
+}
+
+/**
+ * Generates a valid CNPJ
+ * @return The generated CNPJ
+ */
+export function generateCnpj(mask = true): string {
+    let cnpj = ''
+    let i = 12
+
+    while (i--) {
+        cnpj += Math.floor(Math.random() * 9)
     }
 
-    v1 = v1 % 11
+    cnpj += digit(cnpj)
+    cnpj += digit(cnpj)
 
-    if (v1 < 2) {
-        v1 = 0
-    } else {
-        v1 = 11 - v1
+    if (mask) {
+        cnpj = maskCnpj(cnpj)
     }
 
-    if (v1 != cnpj[12]) {
-        return false
-    }
-
-    for (let i = 0, p1 = 6, p2 = 14; cnpj.length - 1 > i; i++, p1--, p2--) {
-        if (p1 >= 2) {
-            v2 += cnpj[i] * p1
-        } else {
-            v2 += cnpj[i] * p2
-        }
-    }
-
-    v2 = v2 % 11
-
-    if (v2 < 2) {
-        v2 = 0
-    } else {
-        v2 = 11 - v2
-    }
-
-    return v2 == cnpj[13];
+    return cnpj
 }
