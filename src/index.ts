@@ -41,6 +41,10 @@ export const RX_IP_ADDRESS = /((\d{1,3}\.){3}\d{1,3})/
 export const RX_PORT_AND_PATH = /(:\d+)?(\/[-a-z\d%_.~+]*)*/
 export const RX_QUERY_STRING = /(\?[;&a-z\d%_.~+=-]*)?/
 export const RX_HASH_STRING = /(#[-a-z\d_]*)?$/
+export const RX_SNAKE_CASE = /[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g
+export const RX_VERIFY_EMAIL = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+export const RX_FORMAT_CNPJ = /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/
+export const RX_FORMAT_CURRENCY = /\B(?=(\d{3})+(?!\d))/g
 
 
 export const isMobile = () => {
@@ -74,7 +78,7 @@ export const capitalizeWords = (str: String) => {
 
 export const toSnakeCase = (str: String) => {
     // @ts-ignore
-    return str.match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
+    return str.match(RX_SNAKE_CASE)
         .map(strLower => strLower.toLowerCase())
         .join('_');
 }
@@ -118,8 +122,7 @@ export const upperCase = (str: any) => toString(str).toUpperCase()
 
 
 export const validateEmail = (email: String) => {
-  const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return regex.test(email.toLowerCase())
+  return RX_VERIFY_EMAIL.test(email.toLowerCase())
 };
 
 /**
@@ -254,7 +257,7 @@ export const deepCopy = (obj: { [x: string]: any; } | null) => {
 
 export const toCurrency = (value: number, prefix = 'R$', $suffix = null) => {
     let val = (value).toFixed(2).replace('.', ',')
-    return `${prefix} ${val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} ${$suffix}`;
+    return `${prefix} ${val.toString().replace(RX_FORMAT_CURRENCY, ".")} ${$suffix}`;
 }
 
 export const firstAndLastName = (fullName: string) => {
@@ -385,7 +388,7 @@ export const maskCnpj = (cnpj: string | number): string  => {
             // Remove non digit characters
             .replace(/[^\d]/g, '')
             // Apply formatting
-            .replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5')
+            .replace(RX_FORMAT_CNPJ, '$1.$2.$3/$4-$5')
     )
 }
 

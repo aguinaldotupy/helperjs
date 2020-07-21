@@ -67,6 +67,10 @@ var RX_IP_ADDRESS = /((\d{1,3}\.){3}\d{1,3})/;
 var RX_PORT_AND_PATH = /(:\d+)?(\/[-a-z\d%_.~+]*)*/;
 var RX_QUERY_STRING = /(\?[;&a-z\d%_.~+=-]*)?/;
 var RX_HASH_STRING = /(#[-a-z\d_]*)?$/;
+var RX_SNAKE_CASE = /[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g;
+var RX_VERIFY_EMAIL = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+var RX_FORMAT_CNPJ = /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/;
+var RX_FORMAT_CURRENCY = /\B(?=(\d{3})+(?!\d))/g;
 var isMobile = function () {
     var check = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS|Windows Phone/i;
     return check.test(navigator.userAgent);
@@ -89,7 +93,7 @@ var capitalizeWords = function (str) {
 };
 var toSnakeCase = function (str) {
     // @ts-ignore
-    return str.match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
+    return str.match(RX_SNAKE_CASE)
         .map(function (strLower) { return strLower.toLowerCase(); })
         .join('_');
 };
@@ -122,8 +126,7 @@ var trim = function (str) { return toString(str).trim(); };
 var lowerCase = function (str) { return toString(str).toLowerCase(); };
 var upperCase = function (str) { return toString(str).toUpperCase(); };
 var validateEmail = function (email) {
-    var regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return regex.test(email.toLowerCase());
+    return RX_VERIFY_EMAIL.test(email.toLowerCase());
 };
 /**
 * @link https://www.qodo.co.uk/blog/javascript-restrict-keyboard-character-input/
@@ -245,7 +248,7 @@ var toCurrency = function (value, prefix, $suffix) {
     if (prefix === void 0) { prefix = 'R$'; }
     if ($suffix === void 0) { $suffix = null; }
     var val = (value).toFixed(2).replace('.', ',');
-    return prefix + " " + val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " " + $suffix;
+    return prefix + " " + val.toString().replace(RX_FORMAT_CURRENCY, ".") + " " + $suffix;
 };
 var firstAndLastName = function (fullName) {
     var names = fullName.split(' ');
@@ -349,7 +352,7 @@ var maskCnpj = function (cnpj) {
         // Remove non digit characters
         .replace(/[^\d]/g, '')
         // Apply formatting
-        .replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5'));
+        .replace(RX_FORMAT_CNPJ, '$1.$2.$3/$4-$5'));
 };
 /**
  * Generates a valid CNPJ
@@ -371,6 +374,8 @@ var generateCnpj = function (mask) {
 };
 
 exports.RX_DOMAIN = RX_DOMAIN;
+exports.RX_FORMAT_CNPJ = RX_FORMAT_CNPJ;
+exports.RX_FORMAT_CURRENCY = RX_FORMAT_CURRENCY;
 exports.RX_HASH_STRING = RX_HASH_STRING;
 exports.RX_HYPHENATE = RX_HYPHENATE;
 exports.RX_IP_ADDRESS = RX_IP_ADDRESS;
@@ -378,9 +383,11 @@ exports.RX_PORT_AND_PATH = RX_PORT_AND_PATH;
 exports.RX_PROTOCOL = RX_PROTOCOL;
 exports.RX_QUERY_STRING = RX_QUERY_STRING;
 exports.RX_REGEXP_REPLACE = RX_REGEXP_REPLACE;
+exports.RX_SNAKE_CASE = RX_SNAKE_CASE;
 exports.RX_TRIM_LEFT = RX_TRIM_LEFT;
 exports.RX_TRIM_RIGHT = RX_TRIM_RIGHT;
 exports.RX_UN_KEBAB = RX_UN_KEBAB;
+exports.RX_VERIFY_EMAIL = RX_VERIFY_EMAIL;
 exports.capitalizeWords = capitalizeWords;
 exports.checkValidUrl = checkValidUrl;
 exports.chunkArray = chunkArray;
