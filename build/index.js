@@ -369,6 +369,25 @@ var generateCnpj = function (mask) {
     }
     return cnpj;
 };
+var generateEmail = function (lengthUserName, lengthDomain) {
+    if (lengthUserName === void 0) { lengthUserName = 10; }
+    if (lengthDomain === void 0) { lengthDomain = lengthUserName / 2; }
+    var strValues = "abcdefghijklmnopqrstuvwxyz0123456789";
+    var strEmail = "";
+    var strTmp;
+    for (var i = 0; i < lengthUserName; i++) {
+        strTmp = strValues.charAt(Math.round(strValues.length * Math.random()));
+        strEmail = strEmail + strTmp;
+    }
+    strTmp = "";
+    strEmail = strEmail + "@";
+    for (var j = 0; j < lengthDomain; j++) {
+        strTmp = strValues.charAt(Math.round(strValues.length * Math.random()));
+        strEmail = strEmail + strTmp;
+    }
+    strEmail = strEmail + ".com";
+    return strEmail;
+};
 
 exports.RX_DOMAIN = RX_DOMAIN;
 exports.RX_HASH_STRING = RX_HASH_STRING;
@@ -389,6 +408,7 @@ exports.deepCopy = deepCopy;
 exports.firstAndLastName = firstAndLastName;
 exports.generateCnpj = generateCnpj;
 exports.generateCpf = generateCpf;
+exports.generateEmail = generateEmail;
 exports.humanFileSize = humanFileSize;
 exports.isArray = isArray;
 exports.isBoolean = isBoolean;

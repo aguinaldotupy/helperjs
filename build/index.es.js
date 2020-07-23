@@ -365,6 +365,25 @@ var generateCnpj = function (mask) {
     }
     return cnpj;
 };
+var generateEmail = function (lengthUserName, lengthDomain) {
+    if (lengthUserName === void 0) { lengthUserName = 10; }
+    if (lengthDomain === void 0) { lengthDomain = lengthUserName / 2; }
+    var strValues = "abcdefghijklmnopqrstuvwxyz0123456789";
+    var strEmail = "";
+    var strTmp;
+    for (var i = 0; i < lengthUserName; i++) {
+        strTmp = strValues.charAt(Math.round(strValues.length * Math.random()));
+        strEmail = strEmail + strTmp;
+    }
+    strTmp = "";
+    strEmail = strEmail + "@";
+    for (var j = 0; j < lengthDomain; j++) {
+        strTmp = strValues.charAt(Math.round(strValues.length * Math.random()));
+        strEmail = strEmail + strTmp;
+    }
+    strEmail = strEmail + ".com";
+    return strEmail;
+};
 
-export { RX_DOMAIN, RX_HASH_STRING, RX_HYPHENATE, RX_IP_ADDRESS, RX_PORT_AND_PATH, RX_PROTOCOL, RX_QUERY_STRING, RX_REGEXP_REPLACE, RX_TRIM_LEFT, RX_TRIM_RIGHT, RX_UN_KEBAB, capitalizeWords, checkValidUrl, chunkArray, decodeString, deepCopy, firstAndLastName, generateCnpj, generateCpf, humanFileSize, isArray, isBoolean, isDate, isDesktop, isEmptyString, isEvent, isFile, isFunction, isMobile, isNull, isNumber, isObject, isPlainObject, isString, isUndefined, isUndefinedOrNull, kebabCase, keydownOnlyNumber, lowerBound, lowerCase, lowerFirst, maskCnpj, pascalCase, restrictCharacters, sleep, sum, toCurrency, toSnakeCase, toString, toType, trim, trimLeft, trimRight, upperCase, upperFirst, validateCnpj, validateCpf, validateEmail };
+export { RX_DOMAIN, RX_HASH_STRING, RX_HYPHENATE, RX_IP_ADDRESS, RX_PORT_AND_PATH, RX_PROTOCOL, RX_QUERY_STRING, RX_REGEXP_REPLACE, RX_TRIM_LEFT, RX_TRIM_RIGHT, RX_UN_KEBAB, capitalizeWords, checkValidUrl, chunkArray, decodeString, deepCopy, firstAndLastName, generateCnpj, generateCpf, generateEmail, humanFileSize, isArray, isBoolean, isDate, isDesktop, isEmptyString, isEvent, isFile, isFunction, isMobile, isNull, isNumber, isObject, isPlainObject, isString, isUndefined, isUndefinedOrNull, kebabCase, keydownOnlyNumber, lowerBound, lowerCase, lowerFirst, maskCnpj, pascalCase, restrictCharacters, sleep, sum, toCurrency, toSnakeCase, toString, toType, trim, trimLeft, trimRight, upperCase, upperFirst, validateCnpj, validateCpf, validateEmail };
 //# sourceMappingURL=index.es.js.map

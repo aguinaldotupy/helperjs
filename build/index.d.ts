@@ -82,3 +82,4 @@ export declare const maskCnpj: (cnpj: string | number) => string;
  * @return The generated CNPJ
  */
 export declare const generateCnpj: (mask?: boolean) => string;
+export declare const generateEmail: (lengthUserName?: number, lengthDomain?: number) => string;
