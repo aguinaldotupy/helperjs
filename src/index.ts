@@ -413,3 +413,26 @@ export const generateCnpj = (mask = true): string => {
 
     return cnpj
 }
+
+export const generateEmail = (lengthUserName = 10, lengthDomain = lengthUserName / 2) => {
+    let strValues = "abcdefghijklmnopqrstuvwxyz0123456789";
+    let strEmail = "";
+    let strTmp;
+
+    for (let i = 0; i < lengthUserName; i++) {
+        strTmp = strValues.charAt(Math.round(strValues.length * Math.random()));
+        strEmail = strEmail + strTmp;
+    }
+
+    strTmp = "";
+    strEmail = strEmail + "@";
+
+    for (let j = 0; j < lengthDomain; j++) {
+        strTmp = strValues.charAt(Math.round(strValues.length * Math.random()));
+        strEmail = strEmail + strTmp;
+    }
+
+    strEmail = strEmail + ".com"
+
+    return strEmail;
+}
