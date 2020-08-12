@@ -436,3 +436,10 @@ export const generateEmail = (lengthUserName = 10, lengthDomain = lengthUserName
 
     return strEmail;
 }
+
+export const filterObject = (object: { [s: string]: unknown; } | ArrayLike<unknown>, callback: (arg0: string, arg1: unknown) => any) => Object.entries(object)
+    .reduce((prev, [key, value]) => ({
+            ...prev,
+            ...(callback(key, value) ? { [key]: value } : {})
+        }), {}
+    );

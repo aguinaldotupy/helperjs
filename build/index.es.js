@@ -13,6 +13,17 @@ OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
 
+var __assign = function() {
+    __assign = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+
 function __read(o, n) {
     var m = typeof Symbol === "function" && o[Symbol.iterator];
     if (!m) return o;
@@ -63,6 +74,10 @@ var RX_IP_ADDRESS = /((\d{1,3}\.){3}\d{1,3})/;
 var RX_PORT_AND_PATH = /(:\d+)?(\/[-a-z\d%_.~+]*)*/;
 var RX_QUERY_STRING = /(\?[;&a-z\d%_.~+=-]*)?/;
 var RX_HASH_STRING = /(#[-a-z\d_]*)?$/;
+var RX_SNAKE_CASE = /[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g;
+var RX_VERIFY_EMAIL = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+var RX_FORMAT_CNPJ = /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/;
+var RX_FORMAT_CURRENCY = /\B(?=(\d{3})+(?!\d))/g;
 var isMobile = function () {
     var check = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS|Windows Phone/i;
     return check.test(navigator.userAgent);
@@ -85,7 +100,7 @@ var capitalizeWords = function (str) {
 };
 var toSnakeCase = function (str) {
     // @ts-ignore
-    return str.match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
+    return str.match(RX_SNAKE_CASE)
         .map(function (strLower) { return strLower.toLowerCase(); })
         .join('_');
 };
@@ -118,8 +133,7 @@ var trim = function (str) { return toString(str).trim(); };
 var lowerCase = function (str) { return toString(str).toLowerCase(); };
 var upperCase = function (str) { return toString(str).toUpperCase(); };
 var validateEmail = function (email) {
-    var regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return regex.test(email.toLowerCase());
+    return RX_VERIFY_EMAIL.test(email.toLowerCase());
 };
 /**
 * @link https://www.qodo.co.uk/blog/javascript-restrict-keyboard-character-input/
@@ -241,7 +255,7 @@ var toCurrency = function (value, prefix, $suffix) {
     if (prefix === void 0) { prefix = 'R$'; }
     if ($suffix === void 0) { $suffix = null; }
     var val = (value).toFixed(2).replace('.', ',');
-    return prefix + " " + val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " " + $suffix;
+    return prefix + " " + val.toString().replace(RX_FORMAT_CURRENCY, ".") + " " + $suffix;
 };
 var firstAndLastName = function (fullName) {
     var names = fullName.split(' ');
@@ -345,7 +359,7 @@ var maskCnpj = function (cnpj) {
         // Remove non digit characters
         .replace(/[^\d]/g, '')
         // Apply formatting
-        .replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5'));
+        .replace(RX_FORMAT_CNPJ, '$1.$2.$3/$4-$5'));
 };
 /**
  * Generates a valid CNPJ
@@ -384,6 +398,12 @@ var generateEmail = function (lengthUserName, lengthDomain) {
     strEmail = strEmail + ".com";
     return strEmail;
 };
+var filterObject = function (object, callback) { return Object.entries(object)
+    .reduce(function (prev, _a) {
+    var _b;
+    var _c = __read(_a, 2), key = _c[0], value = _c[1];
+    return (__assign(__assign({}, prev), (callback(key, value) ? (_b = {}, _b[key] = value, _b) : {})));
+}, {}); };
 
-export { RX_DOMAIN, RX_HASH_STRING, RX_HYPHENATE, RX_IP_ADDRESS, RX_PORT_AND_PATH, RX_PROTOCOL, RX_QUERY_STRING, RX_REGEXP_REPLACE, RX_TRIM_LEFT, RX_TRIM_RIGHT, RX_UN_KEBAB, capitalizeWords, checkValidUrl, chunkArray, decodeString, deepCopy, firstAndLastName, generateCnpj, generateCpf, generateEmail, humanFileSize, isArray, isBoolean, isDate, isDesktop, isEmptyString, isEvent, isFile, isFunction, isMobile, isNull, isNumber, isObject, isPlainObject, isString, isUndefined, isUndefinedOrNull, kebabCase, keydownOnlyNumber, lowerBound, lowerCase, lowerFirst, maskCnpj, pascalCase, restrictCharacters, sleep, sum, toCurrency, toSnakeCase, toString, toType, trim, trimLeft, trimRight, upperCase, upperFirst, validateCnpj, validateCpf, validateEmail };
+export { RX_DOMAIN, RX_FORMAT_CNPJ, RX_FORMAT_CURRENCY, RX_HASH_STRING, RX_HYPHENATE, RX_IP_ADDRESS, RX_PORT_AND_PATH, RX_PROTOCOL, RX_QUERY_STRING, RX_REGEXP_REPLACE, RX_SNAKE_CASE, RX_TRIM_LEFT, RX_TRIM_RIGHT, RX_UN_KEBAB, RX_VERIFY_EMAIL, capitalizeWords, checkValidUrl, chunkArray, decodeString, deepCopy, filterObject, firstAndLastName, generateCnpj, generateCpf, generateEmail, humanFileSize, isArray, isBoolean, isDate, isDesktop, isEmptyString, isEvent, isFile, isFunction, isMobile, isNull, isNumber, isObject, isPlainObject, isString, isUndefined, isUndefinedOrNull, kebabCase, keydownOnlyNumber, lowerBound, lowerCase, lowerFirst, maskCnpj, pascalCase, restrictCharacters, sleep, sum, toCurrency, toSnakeCase, toString, toType, trim, trimLeft, trimRight, upperCase, upperFirst, validateCnpj, validateCpf, validateEmail };
 //# sourceMappingURL=index.es.js.map

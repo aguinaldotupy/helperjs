@@ -17,6 +17,17 @@ OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
 
+var __assign = function() {
+    __assign = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+
 function __read(o, n) {
     var m = typeof Symbol === "function" && o[Symbol.iterator];
     if (!m) return o;
@@ -391,6 +402,12 @@ var generateEmail = function (lengthUserName, lengthDomain) {
     strEmail = strEmail + ".com";
     return strEmail;
 };
+var filterObject = function (object, callback) { return Object.entries(object)
+    .reduce(function (prev, _a) {
+    var _b;
+    var _c = __read(_a, 2), key = _c[0], value = _c[1];
+    return (__assign(__assign({}, prev), (callback(key, value) ? (_b = {}, _b[key] = value, _b) : {})));
+}, {}); };
 
 exports.RX_DOMAIN = RX_DOMAIN;
 exports.RX_FORMAT_CNPJ = RX_FORMAT_CNPJ;
@@ -412,6 +429,7 @@ exports.checkValidUrl = checkValidUrl;
 exports.chunkArray = chunkArray;
 exports.decodeString = decodeString;
 exports.deepCopy = deepCopy;
+exports.filterObject = filterObject;
 exports.firstAndLastName = firstAndLastName;
 exports.generateCnpj = generateCnpj;
 exports.generateCpf = generateCpf;

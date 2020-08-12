@@ -87,3 +87,6 @@ export declare const maskCnpj: (cnpj: string | number) => string;
  */
 export declare const generateCnpj: (mask?: boolean) => string;
 export declare const generateEmail: (lengthUserName?: number, lengthDomain?: number) => string;
+export declare const filterObject: (object: {
+    [s: string]: unknown;
+} | ArrayLike<unknown>, callback: (arg0: string, arg1: unknown) => any) => {};
