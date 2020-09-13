@@ -90,3 +90,4 @@ export declare const generateEmail: (lengthUserName?: number, lengthDomain?: num
 export declare const filterObject: (object: {
     [s: string]: unknown;
 } | ArrayLike<unknown>, callback: (arg0: string, arg1: unknown) => any) => {};
+export declare const calcPercentage: (partialValue: number, totalValue: number) => number;

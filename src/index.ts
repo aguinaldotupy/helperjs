@@ -443,3 +443,7 @@ export const filterObject = (object: { [s: string]: unknown; } | ArrayLike<unkno
             ...(callback(key, value) ? { [key]: value } : {})
         }), {}
     );
+
+export const calcPercentage = (partialValue: number, totalValue: number) => {
+    return parseFloat(((100 * partialValue) / totalValue).toFixed(2));
+}

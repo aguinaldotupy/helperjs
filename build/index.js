@@ -408,6 +408,9 @@ var filterObject = function (object, callback) { return Object.entries(object)
     var _c = __read(_a, 2), key = _c[0], value = _c[1];
     return (__assign(__assign({}, prev), (callback(key, value) ? (_b = {}, _b[key] = value, _b) : {})));
 }, {}); };
+var calcPercentage = function (partialValue, totalValue) {
+    return parseFloat(((100 * partialValue) / totalValue).toFixed(2));
+};
 
 exports.RX_DOMAIN = RX_DOMAIN;
 exports.RX_FORMAT_CNPJ = RX_FORMAT_CNPJ;
@@ -424,6 +427,7 @@ exports.RX_TRIM_LEFT = RX_TRIM_LEFT;
 exports.RX_TRIM_RIGHT = RX_TRIM_RIGHT;
 exports.RX_UN_KEBAB = RX_UN_KEBAB;
 exports.RX_VERIFY_EMAIL = RX_VERIFY_EMAIL;
+exports.calcPercentage = calcPercentage;
 exports.capitalizeWords = capitalizeWords;
 exports.checkValidUrl = checkValidUrl;
 exports.chunkArray = chunkArray;
