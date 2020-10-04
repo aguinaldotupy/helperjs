@@ -4,3 +4,4 @@
 yarn.lock
 /yarn.lock
 /coverage
+.DS_Store
