@@ -1,8 +1,10 @@
+import { DebounceProcedure, DebounceOptions, StrictOption, ToCurrencyOptions } from './types';
+
 export const sum = (a: number, b: number): number => a + b;
 
 export const toType = (value: any) => typeof value
 
-export const isObject = (object: null) => object !== null && typeof object === 'object'
+export const isObject = (object: any) => object !== null && typeof object === 'object'
 
 export const isPlainObject = (object: any) => Object.prototype.toString.call(object) === '[object Object]'
 
@@ -16,19 +18,45 @@ export const isString = (value: any) => toType(value) === 'string'
 
 export const isNumber = (value: any) => toType(value) === 'number'
 
-export const isUndefined = (value: undefined) => value === undefined
+export const isUndefined = (value: any, options: StrictOption = {
+    isStrict: true
+}) => {
+    if (options.isStrict) {
+        return value === undefined
+    }
 
-export const isNull = (value: null) => value === null
+    return value == undefined
+};
+
+export const isNull = (value: any, options: StrictOption = {
+    isStrict: true
+}) => {
+    if (options.isStrict) {
+        return value === null
+    }
+
+    return  value == 'null'
+};
 
 export const isEmptyString = (value: string) => value === ''
 
 export const isDate = (value: any) => value instanceof Date
 
-export const isEvent = (value: any) => value instanceof Event
+export const isEvent = (value: any) => {
+    if (toType(value) === 'object') {
+        return value instanceof Event
+    }
+
+    return false;
+}
 
 export const isFile = (value: any) => value instanceof File
 
-export const isUndefinedOrNull = (value: any) => isUndefined(value) || isNull(value)
+export const isUndefinedOrNull = (value: any, options: StrictOption = {
+    isStrict: true
+}) => {
+    return isUndefined(value, options) || isNull(value, options)
+}
 
 export const RX_TRIM_LEFT = /^\s+/
 export const RX_TRIM_RIGHT = /\s+$/
@@ -55,26 +83,32 @@ export const isMobile = () => {
 export const isDesktop = () => !isMobile();
 
 export const checkValidUrl = (url: string) => {
-  const pattern = new RegExp(
-      `${RX_PROTOCOL}${RX_DOMAIN}${RX_IP_ADDRESS}${RX_PORT_AND_PATH}${RX_QUERY_STRING}${RX_HASH_STRING}`,
-      'i'
-  );
-  return pattern.test(url)
+    const pattern = new RegExp(
+        `${RX_PROTOCOL}${RX_DOMAIN}${RX_IP_ADDRESS}${RX_PORT_AND_PATH}${RX_QUERY_STRING}${RX_HASH_STRING}`,
+        'i'
+    );
+    return pattern.test(url)
 };
 
 export const lowerBound = (num: number, limit: number) => {
-  return num >= limit ? num : limit
+    return num >= limit ? num : limit
 };
 
 export const sleep = (ms: number) => {
-  return new Promise((resolve) => setTimeout(resolve, ms))
+    return new Promise((resolve) => setTimeout(resolve, ms))
 };
 
 export const capitalizeWords = (str: String) => {
-  return str.replace(/\w\S*/g, function(txt) {
-     return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
-  })
+    return str.replace(/\w\S*/g, function(txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+    })
 };
+
+export function toTitleCase(str: string) {
+    return str.toLowerCase().split(' ').map(function (word) {
+        return (word.charAt(0).toUpperCase() + word.slice(1));
+    }).join(' ');
+}
 
 export const toSnakeCase = (str: String) => {
     // @ts-ignore
@@ -122,66 +156,66 @@ export const upperCase = (str: any) => toString(str).toUpperCase()
 
 
 export const validateEmail = (email: String) => {
-  return RX_VERIFY_EMAIL.test(email.toLowerCase())
+    return RX_VERIFY_EMAIL.test(email.toLowerCase())
 };
 
 /**
-* @link https://www.qodo.co.uk/blog/javascript-restrict-keyboard-character-input/
-* @param _myField
-* @param evt
-* @param restrictionType [digitsOnly, floatOnly, alphaOnly]
-*/
+ * @link https://www.qodo.co.uk/blog/javascript-restrict-keyboard-character-input/
+ * @param _myField
+ * @param evt
+ * @param restrictionType [digitsOnly, floatOnly, alphaOnly]
+ */
 export const restrictCharacters = (_myField: HTMLOrSVGElement, evt: KeyboardEvent, restrictionType: string): any => {
     // @ts-ignore
     const self = _myField;
     let restrict;
-  switch (restrictionType) {
-     case 'digitsOnly':
-         restrict = /[1234567890]/g;
-        break;
-     case 'floatOnly':
-         restrict = /[0-9.]/g;
-        break;
-     case 'alphaOnly':
-         restrict = /[A-Za-z]/g;
-        break;
+    switch (restrictionType) {
+        case 'digitsOnly':
+            restrict = /[1234567890]/g;
+            break;
+        case 'floatOnly':
+            restrict = /[0-9.]/g;
+            break;
+        case 'alphaOnly':
+            restrict = /[A-Za-z]/g;
+            break;
 
-     default:
+        default:
+            return false
+    }
+
+    let code = (typeof evt.which !== "undefined") ? evt.which : evt.keyCode;
+
+    const character = String.fromCharCode(code);
+    // if they pressed esc... remove focus from field...
+    if (code === 27) {
+        self.blur();
         return false
-  }
-
-  let code = (typeof evt.which !== "undefined") ? evt.which : evt.keyCode;
-
-  const character = String.fromCharCode(code);
-  // if they pressed esc... remove focus from field...
-  if (code === 27) {
-      self.blur();
-     return false
-  }
-  // ignore if they are press other keys
-  // strange because code: 39 is the down key AND ' key...
-  // and DEL also equals .
-  if (
-      !evt.ctrlKey &&
-      code !== 9 &&
-      code !== 8 &&
-      code !== 36 &&
-      code !== 37 &&
-      code !== 38 &&
-      (code !== 39 || (code === 39 && character === "'")) &&
-      code !== 40
-  ) {
-     return !!character.match(restrict)
-  }
+    }
+    // ignore if they are press other keys
+    // strange because code: 39 is the down key AND ' key...
+    // and DEL also equals .
+    if (
+        !evt.ctrlKey &&
+        code !== 9 &&
+        code !== 8 &&
+        code !== 36 &&
+        code !== 37 &&
+        code !== 38 &&
+        (code !== 39 || (code === 39 && character === "'")) &&
+        code !== 40
+    ) {
+        return !!character.match(restrict)
+    }
 };
 
 export const keydownOnlyNumber = (evt: KeyboardEvent): any => {
-  const charCode = (typeof evt.which !== "undefined") ? evt.which : evt.keyCode;
-  if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode !== 46) {
-     evt.preventDefault()
-  } else {
-     return true
-  }
+    const charCode = (typeof evt.which !== "undefined") ? evt.which : evt.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode !== 46) {
+        evt.preventDefault()
+    } else {
+        return true
+    }
 };
 
 /**
@@ -255,24 +289,72 @@ export const deepCopy = (obj: { [x: string]: any; } | null) => {
     return copy
 }
 
-export const toCurrency = (value: number, prefix = 'R$', $suffix = null) => {
-    let val = (value).toFixed(2).replace('.', ',')
-    return `${prefix} ${val.toString().replace(RX_FORMAT_CURRENCY, ".")} ${$suffix}`;
+export const toCurrency = (value: number, options: ToCurrencyOptions = {
+    locale: 'pt-BR',
+    currency: 'BRL',
+    maximumFractionDigits: 2,
+}, suffix = '') => {
+    let locale, currency, strCurrency, prefix, maximumFractionDigits;
+
+    if (! isNumber(value)) {
+        value = parseFloat(String(value))
+    }
+
+    if (isObject(options)) {
+        locale = options.locale || 'pt-BR';
+        currency = options.currency || 'BRL';
+        maximumFractionDigits = options.maximumFractionDigits || 2
+    } else if (isString(options)) {
+        prefix = String(options);
+
+        if (! isEmptyString(prefix)) {
+            strCurrency = prefix.trim();
+        }
+
+        if (! isEmptyString(suffix) || suffix.trim().length > 1) {
+            strCurrency = suffix.trim();
+        }
+
+        switch (strCurrency) {
+            case 'R$':
+                locale = 'pt-BR';
+                currency = 'BRL';
+                break;
+            case '€':
+                locale = 'pt-PT';
+                currency = 'EUR'
+                break;
+            default:
+        }
+
+        console.warn(`toCurrency: options string deprecated, new version {
+            locale: '${locale}',
+            currency: '${currency}',
+            maximumFractionDigits: 2,
+        }`)
+    }
+
+    switch (currency) {
+        case '€':
+            currency = 'EUR'
+        break;
+
+        case 'R$':
+            currency = 'BRL';
+            break;
+        default:
+    }
+
+    return new Intl.NumberFormat(locale, {
+        style: 'currency',
+        currency,
+        maximumFractionDigits
+    }).format(value)
 }
 
 export const firstAndLastName = (fullName: string) => {
     const names = fullName.split(' ');
-    let firstName;
-    let lastName;
-    if (!names || names.length <= 1) {
-        firstName = names;
-        lastName = '';
-    } else {
-        firstName = names[0];
-        lastName = names.pop();
-    }
-
-    return `${firstName} ${lastName}`;
+    return toTitleCase(`${names.shift()} ${names.pop() || ''}`).trim();
 }
 
 export const chunkArray = (array: string | any[], size: number) => {
@@ -446,4 +528,37 @@ export const filterObject = (object: { [s: string]: unknown; } | ArrayLike<unkno
 
 export const calcPercentage = (partialValue: number, totalValue: number) => {
     return parseFloat(((100 * partialValue) / totalValue).toFixed(2));
+}
+
+export function debounce<F extends DebounceProcedure>(
+    callback: F,
+    waitMilliseconds = 50,
+    options: DebounceOptions = {
+        isImmediate: false
+    },
+): (this: ThisParameterType<F>, ...args: Parameters<F>) => void {
+    let timeoutId: ReturnType<typeof setTimeout > | undefined;
+
+    return function(this: ThisParameterType<F>, ...args: Parameters<F>) {
+        const context = this;
+
+        const doLater = function() {
+            timeoutId = undefined;
+            if (!options.isImmediate) {
+                callback.apply(context, args);
+            }
+        }
+
+        const shouldCallNow = options.isImmediate &&timeoutId === undefined;
+
+        if (timeoutId !== undefined) {
+            clearTimeout(timeoutId);
+        }
+
+        timeoutId = setTimeout(doLater, waitMilliseconds);
+
+        if (shouldCallNow) {
+            callback.apply(context, args);
+        }
+    }
 }

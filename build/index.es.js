@@ -56,13 +56,39 @@ var isFunction = function (value) { return toType(value) === 'function'; };
 var isBoolean = function (value) { return toType(value) === 'boolean'; };
 var isString = function (value) { return toType(value) === 'string'; };
 var isNumber = function (value) { return toType(value) === 'number'; };
-var isUndefined = function (value) { return value === undefined; };
-var isNull = function (value) { return value === null; };
+var isUndefined = function (value, options) {
+    if (options === void 0) { options = {
+        isStrict: true
+    }; }
+    if (options.isStrict) {
+        return value === undefined;
+    }
+    return value == undefined;
+};
+var isNull = function (value, options) {
+    if (options === void 0) { options = {
+        isStrict: true
+    }; }
+    if (options.isStrict) {
+        return value === null;
+    }
+    return value == 'null';
+};
 var isEmptyString = function (value) { return value === ''; };
 var isDate = function (value) { return value instanceof Date; };
-var isEvent = function (value) { return value instanceof Event; };
+var isEvent = function (value) {
+    if (toType(value) === 'object') {
+        return value instanceof Event;
+    }
+    return false;
+};
 var isFile = function (value) { return value instanceof File; };
-var isUndefinedOrNull = function (value) { return isUndefined(value) || isNull(value); };
+var isUndefinedOrNull = function (value, options) {
+    if (options === void 0) { options = {
+        isStrict: true
+    }; }
+    return isUndefined(value, options) || isNull(value, options);
+};
 var RX_TRIM_LEFT = /^\s+/;
 var RX_TRIM_RIGHT = /\s+$/;
 var RX_REGEXP_REPLACE = /[-/\\^$*+?.()|[\]{}]/g;
@@ -98,6 +124,11 @@ var capitalizeWords = function (str) {
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
     });
 };
+function toTitleCase(str) {
+    return str.toLowerCase().split(' ').map(function (word) {
+        return (word.charAt(0).toUpperCase() + word.slice(1));
+    }).join(' ');
+}
 var toSnakeCase = function (str) {
     // @ts-ignore
     return str.match(RX_SNAKE_CASE)
@@ -136,11 +167,11 @@ var validateEmail = function (email) {
     return RX_VERIFY_EMAIL.test(email.toLowerCase());
 };
 /**
-* @link https://www.qodo.co.uk/blog/javascript-restrict-keyboard-character-input/
-* @param _myField
-* @param evt
-* @param restrictionType [digitsOnly, floatOnly, alphaOnly]
-*/
+ * @link https://www.qodo.co.uk/blog/javascript-restrict-keyboard-character-input/
+ * @param _myField
+ * @param evt
+ * @param restrictionType [digitsOnly, floatOnly, alphaOnly]
+ */
 var restrictCharacters = function (_myField, evt, restrictionType) {
     // @ts-ignore
     var self = _myField;
@@ -251,25 +282,59 @@ var deepCopy = function (obj) {
     });
     return copy;
 };
-var toCurrency = function (value, prefix, $suffix) {
-    if (prefix === void 0) { prefix = 'R$'; }
-    if ($suffix === void 0) { $suffix = null; }
-    var val = (value).toFixed(2).replace('.', ',');
-    return prefix + " " + val.toString().replace(RX_FORMAT_CURRENCY, ".") + " " + $suffix;
+var toCurrency = function (value, options, suffix) {
+    if (options === void 0) { options = {
+        locale: 'pt-BR',
+        currency: 'BRL',
+        maximumFractionDigits: 2,
+    }; }
+    if (suffix === void 0) { suffix = ''; }
+    var locale, currency, strCurrency, prefix, maximumFractionDigits;
+    if (!isNumber(value)) {
+        value = parseFloat(String(value));
+    }
+    if (isObject(options)) {
+        locale = options.locale || 'pt-BR';
+        currency = options.currency || 'BRL';
+        maximumFractionDigits = options.maximumFractionDigits || 2;
+    }
+    else if (isString(options)) {
+        prefix = String(options);
+        if (!isEmptyString(prefix)) {
+            strCurrency = prefix.trim();
+        }
+        if (!isEmptyString(suffix) || suffix.trim().length > 1) {
+            strCurrency = suffix.trim();
+        }
+        switch (strCurrency) {
+            case 'R$':
+                locale = 'pt-BR';
+                currency = 'BRL';
+                break;
+            case '€':
+                locale = 'pt-PT';
+                currency = 'EUR';
+                break;
+        }
+        console.warn("toCurrency: options string deprecated, new version {\n            locale: '" + locale + "',\n            currency: '" + currency + "',\n            maximumFractionDigits: 2,\n        }");
+    }
+    switch (currency) {
+        case '€':
+            currency = 'EUR';
+            break;
+        case 'R$':
+            currency = 'BRL';
+            break;
+    }
+    return new Intl.NumberFormat(locale, {
+        style: 'currency',
+        currency: currency,
+        maximumFractionDigits: maximumFractionDigits
+    }).format(value);
 };
 var firstAndLastName = function (fullName) {
     var names = fullName.split(' ');
-    var firstName;
-    var lastName;
-    if (!names || names.length <= 1) {
-        firstName = names;
-        lastName = '';
-    }
-    else {
-        firstName = names[0];
-        lastName = names.pop();
-    }
-    return firstName + " " + lastName;
+    return toTitleCase(names.shift() + " " + (names.pop() || '')).trim();
 };
 var chunkArray = function (array, size) {
     var result = [];
@@ -407,6 +472,34 @@ var filterObject = function (object, callback) { return Object.entries(object)
 var calcPercentage = function (partialValue, totalValue) {
     return parseFloat(((100 * partialValue) / totalValue).toFixed(2));
 };
+function debounce(callback, waitMilliseconds, options) {
+    if (waitMilliseconds === void 0) { waitMilliseconds = 50; }
+    if (options === void 0) { options = {
+        isImmediate: false
+    }; }
+    var timeoutId;
+    return function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
+        var context = this;
+        var doLater = function () {
+            timeoutId = undefined;
+            if (!options.isImmediate) {
+                callback.apply(context, args);
+            }
+        };
+        var shouldCallNow = options.isImmediate && timeoutId === undefined;
+        if (timeoutId !== undefined) {
+            clearTimeout(timeoutId);
+        }
+        timeoutId = setTimeout(doLater, waitMilliseconds);
+        if (shouldCallNow) {
+            callback.apply(context, args);
+        }
+    };
+}
 
-export { RX_DOMAIN, RX_FORMAT_CNPJ, RX_FORMAT_CURRENCY, RX_HASH_STRING, RX_HYPHENATE, RX_IP_ADDRESS, RX_PORT_AND_PATH, RX_PROTOCOL, RX_QUERY_STRING, RX_REGEXP_REPLACE, RX_SNAKE_CASE, RX_TRIM_LEFT, RX_TRIM_RIGHT, RX_UN_KEBAB, RX_VERIFY_EMAIL, calcPercentage, capitalizeWords, checkValidUrl, chunkArray, decodeString, deepCopy, filterObject, firstAndLastName, generateCnpj, generateCpf, generateEmail, humanFileSize, isArray, isBoolean, isDate, isDesktop, isEmptyString, isEvent, isFile, isFunction, isMobile, isNull, isNumber, isObject, isPlainObject, isString, isUndefined, isUndefinedOrNull, kebabCase, keydownOnlyNumber, lowerBound, lowerCase, lowerFirst, maskCnpj, pascalCase, restrictCharacters, sleep, sum, toCurrency, toSnakeCase, toString, toType, trim, trimLeft, trimRight, upperCase, upperFirst, validateCnpj, validateCpf, validateEmail };
+export { RX_DOMAIN, RX_FORMAT_CNPJ, RX_FORMAT_CURRENCY, RX_HASH_STRING, RX_HYPHENATE, RX_IP_ADDRESS, RX_PORT_AND_PATH, RX_PROTOCOL, RX_QUERY_STRING, RX_REGEXP_REPLACE, RX_SNAKE_CASE, RX_TRIM_LEFT, RX_TRIM_RIGHT, RX_UN_KEBAB, RX_VERIFY_EMAIL, calcPercentage, capitalizeWords, checkValidUrl, chunkArray, debounce, decodeString, deepCopy, filterObject, firstAndLastName, generateCnpj, generateCpf, generateEmail, humanFileSize, isArray, isBoolean, isDate, isDesktop, isEmptyString, isEvent, isFile, isFunction, isMobile, isNull, isNumber, isObject, isPlainObject, isString, isUndefined, isUndefinedOrNull, kebabCase, keydownOnlyNumber, lowerBound, lowerCase, lowerFirst, maskCnpj, pascalCase, restrictCharacters, sleep, sum, toCurrency, toSnakeCase, toString, toTitleCase, toType, trim, trimLeft, trimRight, upperCase, upperFirst, validateCnpj, validateCpf, validateEmail };
 //# sourceMappingURL=index.es.js.map
