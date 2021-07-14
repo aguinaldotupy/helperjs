@@ -8,7 +8,8 @@
   "license": "MIT",
   "scripts": {
     "build": "rollup -c",
-    "test": "jest --coverage --silent"
+    "test": "jest --coverage --silent",
+    "release": "npm-github-release"
   },
   "files": [
     "build"
@@ -30,6 +31,7 @@
   "devDependencies": {
     "@types/jest": "^26.0.14",
     "jest": "^26.4.2",
+    "npm-github-release": "^0.13.0",
     "rollup": "^2.2.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
