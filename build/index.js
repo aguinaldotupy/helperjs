@@ -108,6 +108,7 @@ var RX_SNAKE_CASE = /[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|
 var RX_VERIFY_EMAIL = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 var RX_FORMAT_CNPJ = /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/;
 var RX_FORMAT_CURRENCY = /\B(?=(\d{3})+(?!\d))/g;
+var RX_UUID_V4 = /^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i;
 var isMobile = function () {
     var check = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS|Windows Phone/i;
     return check.test(navigator.userAgent);
@@ -504,6 +505,16 @@ function debounce(callback, waitMilliseconds, options) {
         }
     };
 }
+var uuidv4 = function () {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = Math.random() * 16 | 0;
+        var v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+};
+var isUuidV4 = function (string) {
+    return (new RegExp(RX_UUID_V4)).test(string);
+};
 
 exports.RX_DOMAIN = RX_DOMAIN;
 exports.RX_FORMAT_CNPJ = RX_FORMAT_CNPJ;
@@ -519,6 +530,7 @@ exports.RX_SNAKE_CASE = RX_SNAKE_CASE;
 exports.RX_TRIM_LEFT = RX_TRIM_LEFT;
 exports.RX_TRIM_RIGHT = RX_TRIM_RIGHT;
 exports.RX_UN_KEBAB = RX_UN_KEBAB;
+exports.RX_UUID_V4 = RX_UUID_V4;
 exports.RX_VERIFY_EMAIL = RX_VERIFY_EMAIL;
 exports.calcPercentage = calcPercentage;
 exports.capitalizeWords = capitalizeWords;
@@ -549,6 +561,7 @@ exports.isPlainObject = isPlainObject;
 exports.isString = isString;
 exports.isUndefined = isUndefined;
 exports.isUndefinedOrNull = isUndefinedOrNull;
+exports.isUuidV4 = isUuidV4;
 exports.kebabCase = kebabCase;
 exports.keydownOnlyNumber = keydownOnlyNumber;
 exports.lowerBound = lowerBound;
@@ -569,6 +582,7 @@ exports.trimLeft = trimLeft;
 exports.trimRight = trimRight;
 exports.upperCase = upperCase;
 exports.upperFirst = upperFirst;
+exports.uuidv4 = uuidv4;
 exports.validateCnpj = validateCnpj;
 exports.validateCpf = validateCpf;
 exports.validateEmail = validateEmail;

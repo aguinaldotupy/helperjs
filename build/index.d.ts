@@ -30,6 +30,7 @@ export declare const RX_SNAKE_CASE: RegExp;
 export declare const RX_VERIFY_EMAIL: RegExp;
 export declare const RX_FORMAT_CNPJ: RegExp;
 export declare const RX_FORMAT_CURRENCY: RegExp;
+export declare const RX_UUID_V4: RegExp;
 export declare const isMobile: () => boolean;
 export declare const isDesktop: () => boolean;
 export declare const checkValidUrl: (url: string) => boolean;
@@ -94,3 +95,5 @@ export declare const filterObject: (object: {
 } | ArrayLike<unknown>, callback: (arg0: string, arg1: unknown) => any) => {};
 export declare const calcPercentage: (partialValue: number, totalValue: number) => number;
 export declare function debounce<F extends DebounceProcedure>(callback: F, waitMilliseconds?: number, options?: DebounceOptions): (this: ThisParameterType<F>, ...args: Parameters<F>) => void;
+export declare const uuidv4: () => string;
+export declare const isUuidV4: (string: string) => boolean;
