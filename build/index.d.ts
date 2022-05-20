@@ -97,3 +97,5 @@ export declare const calcPercentage: (partialValue: number, totalValue: number) 
 export declare function debounce<F extends DebounceProcedure>(callback: F, waitMilliseconds?: number, options?: DebounceOptions): (this: ThisParameterType<F>, ...args: Parameters<F>) => void;
 export declare const uuidv4: () => string;
 export declare const isUuidV4: (string: string) => boolean;
+export declare const isValidValue: (value: any) => boolean;
+export declare const isInvalidValue: (value: any) => boolean;

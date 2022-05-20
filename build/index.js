@@ -515,6 +515,12 @@ var uuidv4 = function () {
 var isUuidV4 = function (string) {
     return (new RegExp(RX_UUID_V4)).test(string);
 };
+var isValidValue = function (value) {
+    return !isInvalidValue(value);
+};
+var isInvalidValue = function (value) {
+    return [null, 'null', '', ' ', undefined, 'undefined'].includes(value);
+};
 
 exports.RX_DOMAIN = RX_DOMAIN;
 exports.RX_FORMAT_CNPJ = RX_FORMAT_CNPJ;
@@ -553,6 +559,7 @@ exports.isEmptyString = isEmptyString;
 exports.isEvent = isEvent;
 exports.isFile = isFile;
 exports.isFunction = isFunction;
+exports.isInvalidValue = isInvalidValue;
 exports.isMobile = isMobile;
 exports.isNull = isNull;
 exports.isNumber = isNumber;
@@ -562,6 +569,7 @@ exports.isString = isString;
 exports.isUndefined = isUndefined;
 exports.isUndefinedOrNull = isUndefinedOrNull;
 exports.isUuidV4 = isUuidV4;
+exports.isValidValue = isValidValue;
 exports.kebabCase = kebabCase;
 exports.keydownOnlyNumber = keydownOnlyNumber;
 exports.lowerBound = lowerBound;

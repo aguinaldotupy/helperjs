@@ -574,3 +574,11 @@ export const uuidv4 = () => {
 export const isUuidV4 = (string: string) => {
     return (new RegExp(RX_UUID_V4)).test(string)
 }
+
+export const isValidValue = (value: any) => {
+    return !isInvalidValue(value)
+}
+
+export const isInvalidValue = (value: any) => {
+    return [null, 'null', '', ' ', undefined, 'undefined'].includes(value)
+}
