@@ -515,6 +515,9 @@ var isValidValue = function (value) {
     return !isInvalidValue(value);
 };
 var isInvalidValue = function (value) {
+    if (isString(value)) {
+        value = value.trim();
+    }
     return [null, 'null', '', ' ', undefined, 'undefined'].includes(value);
 };
 
