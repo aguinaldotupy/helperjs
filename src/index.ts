@@ -580,5 +580,8 @@ export const isValidValue = (value: any) => {
 }
 
 export const isInvalidValue = (value: any) => {
+    if (isString(value)) {
+        value = value.trim()
+    }
     return [null, 'null', '', ' ', undefined, 'undefined'].includes(value)
 }
