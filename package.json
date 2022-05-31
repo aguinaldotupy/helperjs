@@ -1,6 +1,6 @@
 {
   "name": "tupy-helperjs",
-  "version": "1.9.0",
+  "version": "1.9.1",
   "description": "Helper Functions JavaScript",
   "main": "build/index.js",
   "module": "build/index.es.js",
