@@ -1,4 +1,5 @@
 import { DebounceProcedure, DebounceOptions, StrictOption, ToCurrencyOptions } from './types';
+import {IFnRecursiveIterator} from "./interfaces";
 
 export const sum = (a: number, b: number): number => a + b;
 
@@ -584,4 +585,57 @@ export const isInvalidValue = (value: any) => {
         value = value.trim()
     }
     return [null, 'null', '', ' ', undefined, 'undefined'].includes(value)
+}
+
+export const forEachObject = (obj: Object, fn: IFnRecursiveIterator, path: any) => {
+    for (const key in obj) {
+        const deepPath = path ? `${path}.${key}` : key;
+
+        // Note that we always use obj[key] because it might be mutated by forEach
+        fn.call(obj, obj[key], key, obj, deepPath);
+
+        recursiveIterator(obj[key], fn, deepPath);
+    }
+}
+
+export const forEachArray = (array: any[], fn: IFnRecursiveIterator, path: any) => {
+    array.forEach((value, index, arr) => {
+        const deepPath = `${path}[${index}]`;
+
+        fn.call(arr, value, index, arr, deepPath);
+
+        // Note that we use arr[index] because it might be mutated by forEach
+        recursiveIterator(arr[index], fn, deepPath);
+    });
+}
+
+/**
+ * Recursively iterate over an object or array.
+ * @param value
+ * @param callback - function to call on each value in the object or array (value, key, object, path)
+ * `value` is the current property value
+ * `key` is the current property name
+ * `subject` is either an array or an object
+ * `path` is the iteration path, e.g.: 'prop2[0]' and 'prop4.prop5'
+ * @param path
+ */
+export const recursiveIterator = (value: any, callback: IFnRecursiveIterator, path: any = '') => {
+    path = path || '';
+
+    if (Array.isArray(value)) {
+        forEachArray(value, callback, path);
+    } else if (isPlainObject(value)) {
+        forEachObject(value, callback, path);
+    }
+}
+
+/**
+ * @param object
+ */
+export const makeFormDataFromObject = (object: { [s: string]: unknown; }): FormData => {
+    const formData = new FormData();
+    recursiveIterator(object, (value, _key, _subject, path) => {
+        formData.append(path, value);
+    });
+    return formData;
 }

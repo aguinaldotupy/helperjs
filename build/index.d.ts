@@ -1,4 +1,5 @@
 import { DebounceProcedure, DebounceOptions, StrictOption, ToCurrencyOptions } from './types';
+import { IFnRecursiveIterator } from "./interfaces";
 export declare const sum: (a: number, b: number) => number;
 export declare const toType: (value: any) => "string" | "number" | "bigint" | "boolean" | "symbol" | "undefined" | "object" | "function";
 export declare const isObject: (object: any) => boolean;
@@ -99,3 +100,22 @@ export declare const uuidv4: () => string;
 export declare const isUuidV4: (string: string) => boolean;
 export declare const isValidValue: (value: any) => boolean;
 export declare const isInvalidValue: (value: any) => boolean;
+export declare const forEachObject: (obj: Object, fn: IFnRecursiveIterator, path: any) => void;
+export declare const forEachArray: (array: any[], fn: IFnRecursiveIterator, path: any) => void;
+/**
+ * Recursively iterate over an object or array.
+ * @param value
+ * @param callback - function to call on each value in the object or array (value, key, object, path)
+ * `value` is the current property value
+ * `key` is the current property name
+ * `subject` is either an array or an object
+ * `path` is the iteration path, e.g.: 'prop2[0]' and 'prop4.prop5'
+ * @param path
+ */
+export declare const recursiveIterator: (value: any, callback: IFnRecursiveIterator, path?: any) => void;
+/**
+ * @param object
+ */
+export declare const makeFormDataFromObject: (object: {
+    [s: string]: unknown;
+}) => FormData;

@@ -524,6 +524,52 @@ var isInvalidValue = function (value) {
     }
     return [null, 'null', '', ' ', undefined, 'undefined'].includes(value);
 };
+var forEachObject = function (obj, fn, path) {
+    for (var key in obj) {
+        var deepPath = path ? path + "." + key : key;
+        // Note that we always use obj[key] because it might be mutated by forEach
+        fn.call(obj, obj[key], key, obj, deepPath);
+        recursiveIterator(obj[key], fn, deepPath);
+    }
+};
+var forEachArray = function (array, fn, path) {
+    array.forEach(function (value, index, arr) {
+        var deepPath = path + "[" + index + "]";
+        fn.call(arr, value, index, arr, deepPath);
+        // Note that we use arr[index] because it might be mutated by forEach
+        recursiveIterator(arr[index], fn, deepPath);
+    });
+};
+/**
+ * Recursively iterate over an object or array.
+ * @param value
+ * @param callback - function to call on each value in the object or array (value, key, object, path)
+ * `value` is the current property value
+ * `key` is the current property name
+ * `subject` is either an array or an object
+ * `path` is the iteration path, e.g.: 'prop2[0]' and 'prop4.prop5'
+ * @param path
+ */
+var recursiveIterator = function (value, callback, path) {
+    if (path === void 0) { path = ''; }
+    path = path || '';
+    if (Array.isArray(value)) {
+        forEachArray(value, callback, path);
+    }
+    else if (isPlainObject(value)) {
+        forEachObject(value, callback, path);
+    }
+};
+/**
+ * @param object
+ */
+var makeFormDataFromObject = function (object) {
+    var formData = new FormData();
+    recursiveIterator(object, function (value, _key, _subject, path) {
+        formData.append(path, value);
+    });
+    return formData;
+};
 
 exports.RX_DOMAIN = RX_DOMAIN;
 exports.RX_FORMAT_CNPJ = RX_FORMAT_CNPJ;
@@ -550,6 +596,8 @@ exports.decodeString = decodeString;
 exports.deepCopy = deepCopy;
 exports.filterObject = filterObject;
 exports.firstAndLastName = firstAndLastName;
+exports.forEachArray = forEachArray;
+exports.forEachObject = forEachObject;
 exports.generateCnpj = generateCnpj;
 exports.generateCpf = generateCpf;
 exports.generateEmail = generateEmail;
@@ -578,8 +626,10 @@ exports.keydownOnlyNumber = keydownOnlyNumber;
 exports.lowerBound = lowerBound;
 exports.lowerCase = lowerCase;
 exports.lowerFirst = lowerFirst;
+exports.makeFormDataFromObject = makeFormDataFromObject;
 exports.maskCnpj = maskCnpj;
 exports.pascalCase = pascalCase;
+exports.recursiveIterator = recursiveIterator;
 exports.restrictCharacters = restrictCharacters;
 exports.sleep = sleep;
 exports.sum = sum;

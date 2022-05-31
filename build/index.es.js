@@ -520,6 +520,52 @@ var isInvalidValue = function (value) {
     }
     return [null, 'null', '', ' ', undefined, 'undefined'].includes(value);
 };
+var forEachObject = function (obj, fn, path) {
+    for (var key in obj) {
+        var deepPath = path ? path + "." + key : key;
+        // Note that we always use obj[key] because it might be mutated by forEach
+        fn.call(obj, obj[key], key, obj, deepPath);
+        recursiveIterator(obj[key], fn, deepPath);
+    }
+};
+var forEachArray = function (array, fn, path) {
+    array.forEach(function (value, index, arr) {
+        var deepPath = path + "[" + index + "]";
+        fn.call(arr, value, index, arr, deepPath);
+        // Note that we use arr[index] because it might be mutated by forEach
+        recursiveIterator(arr[index], fn, deepPath);
+    });
+};
+/**
+ * Recursively iterate over an object or array.
+ * @param value
+ * @param callback - function to call on each value in the object or array (value, key, object, path)
+ * `value` is the current property value
+ * `key` is the current property name
+ * `subject` is either an array or an object
+ * `path` is the iteration path, e.g.: 'prop2[0]' and 'prop4.prop5'
+ * @param path
+ */
+var recursiveIterator = function (value, callback, path) {
+    if (path === void 0) { path = ''; }
+    path = path || '';
+    if (Array.isArray(value)) {
+        forEachArray(value, callback, path);
+    }
+    else if (isPlainObject(value)) {
+        forEachObject(value, callback, path);
+    }
+};
+/**
+ * @param object
+ */
+var makeFormDataFromObject = function (object) {
+    var formData = new FormData();
+    recursiveIterator(object, function (value, _key, _subject, path) {
+        formData.append(path, value);
+    });
+    return formData;
+};
 
-export { RX_DOMAIN, RX_FORMAT_CNPJ, RX_FORMAT_CURRENCY, RX_HASH_STRING, RX_HYPHENATE, RX_IP_ADDRESS, RX_PORT_AND_PATH, RX_PROTOCOL, RX_QUERY_STRING, RX_REGEXP_REPLACE, RX_SNAKE_CASE, RX_TRIM_LEFT, RX_TRIM_RIGHT, RX_UN_KEBAB, RX_UUID_V4, RX_VERIFY_EMAIL, calcPercentage, capitalizeWords, checkValidUrl, chunkArray, debounce, decodeString, deepCopy, filterObject, firstAndLastName, generateCnpj, generateCpf, generateEmail, humanFileSize, isArray, isBoolean, isDate, isDesktop, isEmptyString, isEvent, isFile, isFunction, isInvalidValue, isMobile, isNull, isNumber, isObject, isPlainObject, isString, isUndefined, isUndefinedOrNull, isUuidV4, isValidValue, kebabCase, keydownOnlyNumber, lowerBound, lowerCase, lowerFirst, maskCnpj, pascalCase, restrictCharacters, sleep, sum, toCurrency, toSnakeCase, toString, toTitleCase, toType, trim, trimLeft, trimRight, upperCase, upperFirst, uuidv4, validateCnpj, validateCpf, validateEmail };
+export { RX_DOMAIN, RX_FORMAT_CNPJ, RX_FORMAT_CURRENCY, RX_HASH_STRING, RX_HYPHENATE, RX_IP_ADDRESS, RX_PORT_AND_PATH, RX_PROTOCOL, RX_QUERY_STRING, RX_REGEXP_REPLACE, RX_SNAKE_CASE, RX_TRIM_LEFT, RX_TRIM_RIGHT, RX_UN_KEBAB, RX_UUID_V4, RX_VERIFY_EMAIL, calcPercentage, capitalizeWords, checkValidUrl, chunkArray, debounce, decodeString, deepCopy, filterObject, firstAndLastName, forEachArray, forEachObject, generateCnpj, generateCpf, generateEmail, humanFileSize, isArray, isBoolean, isDate, isDesktop, isEmptyString, isEvent, isFile, isFunction, isInvalidValue, isMobile, isNull, isNumber, isObject, isPlainObject, isString, isUndefined, isUndefinedOrNull, isUuidV4, isValidValue, kebabCase, keydownOnlyNumber, lowerBound, lowerCase, lowerFirst, makeFormDataFromObject, maskCnpj, pascalCase, recursiveIterator, restrictCharacters, sleep, sum, toCurrency, toSnakeCase, toString, toTitleCase, toType, trim, trimLeft, trimRight, upperCase, upperFirst, uuidv4, validateCnpj, validateCpf, validateEmail };
 //# sourceMappingURL=index.es.js.map
