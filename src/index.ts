@@ -1,4 +1,4 @@
-import { DebounceProcedure, DebounceOptions, StrictOption, ToCurrencyOptions } from './types';
+import {DebounceProcedure, DebounceOptions, StrictOption, ToCurrencyOptions} from './types';
 import {IFnRecursiveIterator} from "./interfaces";
 
 export const sum = (a: number, b: number): number => a + b;
@@ -36,7 +36,7 @@ export const isNull = (value: any, options: StrictOption = {
         return value === null
     }
 
-    return  value == 'null'
+    return value == 'null'
 };
 
 export const isEmptyString = (value: string) => value === ''
@@ -100,7 +100,7 @@ export const sleep = (ms: number) => {
 };
 
 export const capitalizeWords = (str: String) => {
-    return str.replace(/\w\S*/g, function(txt) {
+    return str.replace(/\w\S*/g, function (txt) {
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
     })
 };
@@ -206,7 +206,7 @@ export const restrictCharacters = (_myField: HTMLOrSVGElement, evt: KeyboardEven
         (code !== 39 || (code === 39 && character === "'")) &&
         code !== 40 &&
         //Hammmeeeer... code numeric keypad
-        ! (code >= 96 && code <= 105 || code === 110)
+        !(code >= 96 && code <= 105 || code === 110)
     ) {
         return !!character.match(restrict)
     }
@@ -239,7 +239,7 @@ function generateRandom(n: number) {
 }
 
 function mod(dividendo: number, divisor: number) {
-    return Math.round(dividendo - (Math.floor(dividendo/divisor)*divisor));
+    return Math.round(dividendo - (Math.floor(dividendo / divisor) * divisor));
 }
 
 export const generateCpf = (mask = false) => {
@@ -253,12 +253,12 @@ export const generateCpf = (mask = false) => {
     let n7 = generateRandom(n);
     let n8 = generateRandom(n);
     let n9 = generateRandom(n);
-    let d1 = n9*2+n8*3+n7*4+n6*5+n5*6+n4*7+n3*8+n2*9+n1*10;
-    d1 = 11 - (mod(d1,11));
-    if (d1>=10) d1 = 0;
-    let d2 = d1*2+n9*3+n8*4+n7*5+n6*6+n5*7+n4*8+n3*9+n2*10+n1*11;
-    d2 = 11 - (mod(d2,11));
-    if (d2>=10) d2 = 0;
+    let d1 = n9 * 2 + n8 * 3 + n7 * 4 + n6 * 5 + n5 * 6 + n4 * 7 + n3 * 8 + n2 * 9 + n1 * 10;
+    d1 = 11 - (mod(d1, 11));
+    if (d1 >= 10) d1 = 0;
+    let d2 = d1 * 2 + n9 * 3 + n8 * 4 + n7 * 5 + n6 * 6 + n5 * 7 + n4 * 8 + n3 * 9 + n2 * 10 + n1 * 11;
+    d2 = 11 - (mod(d2, 11));
+    if (d2 >= 10) d2 = 0;
 
     if (mask) {
         return `${n1}${n2}${n3}.${n4}${n5}${n6}.${n7}${n8}${n9}-${d1}${d2}`;
@@ -299,7 +299,7 @@ export const toCurrency = (value: number, options: ToCurrencyOptions = {
 }, suffix = '') => {
     let locale, currency, strCurrency, prefix, maximumFractionDigits;
 
-    if (! isNumber(value)) {
+    if (!isNumber(value)) {
         value = parseFloat(String(value))
     }
 
@@ -310,11 +310,11 @@ export const toCurrency = (value: number, options: ToCurrencyOptions = {
     } else if (isString(options)) {
         prefix = String(options);
 
-        if (! isEmptyString(prefix)) {
+        if (!isEmptyString(prefix)) {
             strCurrency = prefix.trim();
         }
 
-        if (! isEmptyString(suffix) || suffix.trim().length > 1) {
+        if (!isEmptyString(suffix) || suffix.trim().length > 1) {
             strCurrency = suffix.trim();
         }
 
@@ -340,7 +340,7 @@ export const toCurrency = (value: number, options: ToCurrencyOptions = {
     switch (currency) {
         case '€':
             currency = 'EUR'
-        break;
+            break;
 
         case 'R$':
             currency = 'BRL';
@@ -466,7 +466,7 @@ export const validateCnpj = (cnpj: string | number): boolean => {
  * @param cnpj The CNPJ to be formatted
  * @return The formatted CNPJ
  */
-export const maskCnpj = (cnpj: string | number): string  => {
+export const maskCnpj = (cnpj: string | number): string => {
     return (
         cnpj
             .toString()
@@ -525,7 +525,7 @@ export const generateEmail = (lengthUserName = 10, lengthDomain = lengthUserName
 export const filterObject = (object: { [s: string]: unknown; } | ArrayLike<unknown>, callback: (arg0: string, arg1: unknown) => any) => Object.entries(object)
     .reduce((prev, [key, value]) => ({
             ...prev,
-            ...(callback(key, value) ? { [key]: value } : {})
+            ...(callback(key, value) ? {[key]: value} : {})
         }), {}
     );
 
@@ -540,19 +540,19 @@ export function debounce<F extends DebounceProcedure>(
         isImmediate: false
     },
 ): (this: ThisParameterType<F>, ...args: Parameters<F>) => void {
-    let timeoutId: ReturnType<typeof setTimeout > | undefined;
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
 
-    return function(this: ThisParameterType<F>, ...args: Parameters<F>) {
+    return function (this: ThisParameterType<F>, ...args: Parameters<F>) {
         const context = this;
 
-        const doLater = function() {
+        const doLater = function () {
             timeoutId = undefined;
             if (!options.isImmediate) {
                 callback.apply(context, args);
             }
         }
 
-        const shouldCallNow = options.isImmediate &&timeoutId === undefined;
+        const shouldCallNow = options.isImmediate && timeoutId === undefined;
 
         if (timeoutId !== undefined) {
             clearTimeout(timeoutId);
@@ -640,4 +640,13 @@ export const makeFormDataFromObject = (object: { [s: string]: unknown; }): FormD
         formData.append(path, value);
     });
     return formData;
+}
+
+export const inputOnlyNumber = (evt: KeyboardEvent): void => {
+    const keysAllowed: string[] = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'];
+    const keyPressed: string = evt.key;
+
+    if (!keysAllowed.includes(keyPressed)) {
+        evt.preventDefault()
+    }
 }
