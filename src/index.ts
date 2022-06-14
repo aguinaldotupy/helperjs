@@ -204,7 +204,9 @@ export const restrictCharacters = (_myField: HTMLOrSVGElement, evt: KeyboardEven
         code !== 37 &&
         code !== 38 &&
         (code !== 39 || (code === 39 && character === "'")) &&
-        code !== 40
+        code !== 40 &&
+        //Hammmeeeer... code numeric keypad
+        ! (code >= 96 && code <= 105 || code === 110)
     ) {
         return !!character.match(restrict)
     }
