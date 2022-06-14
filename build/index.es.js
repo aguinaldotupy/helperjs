@@ -207,7 +207,9 @@ var restrictCharacters = function (_myField, evt, restrictionType) {
         code !== 37 &&
         code !== 38 &&
         (code !== 39 || (code === 39 && character === "'")) &&
-        code !== 40) {
+        code !== 40 &&
+        //Hammmeeeer... code numeric keypad
+        !(code >= 96 && code <= 105 || code === 110)) {
         return !!character.match(restrict);
     }
 };
@@ -566,6 +568,13 @@ var makeFormDataFromObject = function (object) {
     });
     return formData;
 };
+var inputOnlyNumber = function (evt) {
+    var keysAllowed = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'];
+    var keyPressed = evt.key;
+    if (!keysAllowed.includes(keyPressed)) {
+        evt.preventDefault();
+    }
+};
 
-export { RX_DOMAIN, RX_FORMAT_CNPJ, RX_FORMAT_CURRENCY, RX_HASH_STRING, RX_HYPHENATE, RX_IP_ADDRESS, RX_PORT_AND_PATH, RX_PROTOCOL, RX_QUERY_STRING, RX_REGEXP_REPLACE, RX_SNAKE_CASE, RX_TRIM_LEFT, RX_TRIM_RIGHT, RX_UN_KEBAB, RX_UUID_V4, RX_VERIFY_EMAIL, calcPercentage, capitalizeWords, checkValidUrl, chunkArray, debounce, decodeString, deepCopy, filterObject, firstAndLastName, forEachArray, forEachObject, generateCnpj, generateCpf, generateEmail, humanFileSize, isArray, isBoolean, isDate, isDesktop, isEmptyString, isEvent, isFile, isFunction, isInvalidValue, isMobile, isNull, isNumber, isObject, isPlainObject, isString, isUndefined, isUndefinedOrNull, isUuidV4, isValidValue, kebabCase, keydownOnlyNumber, lowerBound, lowerCase, lowerFirst, makeFormDataFromObject, maskCnpj, pascalCase, recursiveIterator, restrictCharacters, sleep, sum, toCurrency, toSnakeCase, toString, toTitleCase, toType, trim, trimLeft, trimRight, upperCase, upperFirst, uuidv4, validateCnpj, validateCpf, validateEmail };
+export { RX_DOMAIN, RX_FORMAT_CNPJ, RX_FORMAT_CURRENCY, RX_HASH_STRING, RX_HYPHENATE, RX_IP_ADDRESS, RX_PORT_AND_PATH, RX_PROTOCOL, RX_QUERY_STRING, RX_REGEXP_REPLACE, RX_SNAKE_CASE, RX_TRIM_LEFT, RX_TRIM_RIGHT, RX_UN_KEBAB, RX_UUID_V4, RX_VERIFY_EMAIL, calcPercentage, capitalizeWords, checkValidUrl, chunkArray, debounce, decodeString, deepCopy, filterObject, firstAndLastName, forEachArray, forEachObject, generateCnpj, generateCpf, generateEmail, humanFileSize, inputOnlyNumber, isArray, isBoolean, isDate, isDesktop, isEmptyString, isEvent, isFile, isFunction, isInvalidValue, isMobile, isNull, isNumber, isObject, isPlainObject, isString, isUndefined, isUndefinedOrNull, isUuidV4, isValidValue, kebabCase, keydownOnlyNumber, lowerBound, lowerCase, lowerFirst, makeFormDataFromObject, maskCnpj, pascalCase, recursiveIterator, restrictCharacters, sleep, sum, toCurrency, toSnakeCase, toString, toTitleCase, toType, trim, trimLeft, trimRight, upperCase, upperFirst, uuidv4, validateCnpj, validateCpf, validateEmail };
 //# sourceMappingURL=index.es.js.map

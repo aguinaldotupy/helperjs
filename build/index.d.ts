@@ -119,3 +119,4 @@ export declare const recursiveIterator: (value: any, callback: IFnRecursiveItera
 export declare const makeFormDataFromObject: (object: {
     [s: string]: unknown;
 }) => FormData;
+export declare const inputOnlyNumber: (evt: KeyboardEvent) => void;

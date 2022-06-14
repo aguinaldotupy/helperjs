@@ -211,7 +211,9 @@ var restrictCharacters = function (_myField, evt, restrictionType) {
         code !== 37 &&
         code !== 38 &&
         (code !== 39 || (code === 39 && character === "'")) &&
-        code !== 40) {
+        code !== 40 &&
+        //Hammmeeeer... code numeric keypad
+        !(code >= 96 && code <= 105 || code === 110)) {
         return !!character.match(restrict);
     }
 };
@@ -570,6 +572,13 @@ var makeFormDataFromObject = function (object) {
     });
     return formData;
 };
+var inputOnlyNumber = function (evt) {
+    var keysAllowed = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'];
+    var keyPressed = evt.key;
+    if (!keysAllowed.includes(keyPressed)) {
+        evt.preventDefault();
+    }
+};
 
 exports.RX_DOMAIN = RX_DOMAIN;
 exports.RX_FORMAT_CNPJ = RX_FORMAT_CNPJ;
@@ -602,6 +611,7 @@ exports.generateCnpj = generateCnpj;
 exports.generateCpf = generateCpf;
 exports.generateEmail = generateEmail;
 exports.humanFileSize = humanFileSize;
+exports.inputOnlyNumber = inputOnlyNumber;
 exports.isArray = isArray;
 exports.isBoolean = isBoolean;
 exports.isDate = isDate;
